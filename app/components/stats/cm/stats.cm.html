@@ -1,0 +1,176 @@
+<ad-widget>
+	<ad-widget-header icon="bi bi-bar-chart" title="Stats for today CM"></ad-widget-header>
+	<ad-widget-body classes="stats">
+		<table class="table table-borderless table-sm" cellspacing="0" cellpadding="0">
+			<tr>
+				<th>Server</th>
+				<th>Sent</th>
+				<th>Failed</th>
+				<th>Failed Final</th>
+				<th>Cancelled</th>
+				<th>Created</th>
+				<th>Scheduled</th>
+				<th>Progress</th>
+			</tr>
+			<tr>
+				<td>
+					קמפיין סמס
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmSmsDistributedQuery }}" uib-tooltip="[astro] cm-sms baskets distributed">
+						{{ $ctrl.cmSmsDistributed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmSmsFailedQuery }}" uib-tooltip="[astro] cm-sms baskets failed">
+						{{ $ctrl.cmSmsFailed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmSmsFailedFinalQuery }}" uib-tooltip="[astro] cm-sms baskets failed final">
+						{{ $ctrl.cmSmsFailedFinal }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmSmsCancelledQuery }}" uib-tooltip="[astro] cm-sms cancelled baskets">
+						{{ $ctrl.cmSmsCancelled }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmSmsCreatedQuery }}" uib-tooltip="[ifs-cm-sms] sms baskets created">
+						{{ $ctrl.cmSmsCreated }}
+					</a>
+				</td>
+				<td>{{ $ctrl.cmSmsScheduledCount }}</td>
+				<td>
+					<uib-progressbar animate="true"
+					                 value="(($ctrl.cmSmsDistributed | num)  + ($ctrl.cmSmsCancelled | num) + ($ctrl.cmSmsFailedFinal | num))/$ctrl.cmSmsCreated * 100"
+					                 type="info"
+					                 ng-show="$ctrl.cmSmsDistributed > 0 && $ctrl.cmSmsCreated > 0">
+						<b>{{ (((($ctrl.cmSmsDistributed | num)  + ($ctrl.cmSmsCancelled | num) + ($ctrl.cmSmsFailedFinal | num))/$ctrl.cmSmsCreated * 100) | number : 1)*1 }}%</b>
+					</uib-progressbar>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					קמפיין מייל
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmPmDistributedQuery }}" uib-tooltip="[astro] cm email distributed">
+						{{ $ctrl.cmPmDistributed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmPmFailedQuery }}" uib-tooltip="[astro] cm email failed">
+						{{ $ctrl.cmPmFailed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmPmFailedFinalQuery }}" uib-tooltip="[astro] cm email failed final">
+						{{ $ctrl.cmPmFailedFinal }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmPmCancelledQuery }}" uib-tooltip="[astro] cm email cancelled baskets">
+						{{ $ctrl.cmPmCancelled }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.cmPmCreatedQuery }}" uib-tooltip="[ifs-cm-pm] email created">
+						{{ $ctrl.cmPmCreated }}
+					</a>
+				</td>
+				<td>{{ $ctrl.cmPmScheduledCount }}</td>
+				<td>
+					<uib-progressbar animate="true"
+					                 value="(($ctrl.cmPmDistributed | num)  + ($ctrl.cmPmCancelled | num) + ($ctrl.cmPmFailedFinal | num))/$ctrl.cmPmCreated * 100"
+					                 type="info"
+					                 ng-show="$ctrl.cmPmDistributed > 0 && $ctrl.cmPmCreated > 0">
+						<b>{{ (((($ctrl.cmPmDistributed | num)  + ($ctrl.cmPmCancelled | num) + ($ctrl.cmPmFailedFinal | num))/$ctrl.cmPmCreated * 100) | number:1)*1 }}%</b>
+					</uib-progressbar>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					חידושים סמס
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanSmsDistributedQuery }}" uib-tooltip="[astro] renewal sms distributed">
+						{{ $ctrl.distribPlanSmsDistributed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanSmsFailedQuery }}" uib-tooltip="[astro] renewal sms baskets failed">
+						{{ $ctrl.distribPlanSmsFailed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanSmsFailedFinalQuery }}" uib-tooltip="[astro] renewal sms baskets failed final">
+						{{ $ctrl.distribPlanSmsFailedFinal }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanSmsCancelledQuery }}" uib-tooltip="[astro] renewal sms baskets cancelled">
+						{{ $ctrl.distribPlanSmsCancelled }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanSmsCreatedQuery }}" uib-tooltip="[ifs-distrib-plan] renewal sms created">
+						{{ $ctrl.distribPlanSmsCreated }}
+					</a>
+				</td>
+				<td>{{ $ctrl.cmRenewalSmsScheduledCount }}</td>
+				<td>
+					<uib-progressbar animate="true"
+					                 value="(($ctrl.distribPlanSmsDistributed | num)  + ($ctrl.distribPlanSmsCancelled | num) + ($ctrl.distribPlanSmsFailedFinal | num))/$ctrl.distribPlanSmsCreated * 100"
+					                 type="info"
+					                 ng-show="$ctrl.distribPlanSmsDistributed > 0 && $ctrl.distribPlanSmsCreated > 0">
+						<b>{{ (((($ctrl.distribPlanSmsDistributed | num) + ($ctrl.distribPlanSmsCancelled | num) + ($ctrl.distribPlanSmsFailedFinal | num))/$ctrl.distribPlanSmsCreated * 100) | number:1) *1 }}%</b>
+					</uib-progressbar>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					חידושים מייל
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanEmailDistributedQuery }}" uib-tooltip="[astro] renewal email distributed">
+						{{ $ctrl.distribPlanEmailDistributed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanEmailFailedQuery }}" uib-tooltip="[astro] renewal email baskets failed">
+						{{ $ctrl.distribPlanEmailFailed }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanEmailFailedFinalQuery }}" uib-tooltip="[astro] renewal email baskets failed final">
+						{{ $ctrl.distribPlanEmailFailedFinal }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanEmailCancelledQuery }}" uib-tooltip="[astro] renewal email baskets cancelled">
+						{{ $ctrl.distribPlanEmailCancelled }}
+					</a>
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.distribPlanEmailCreatedQuery }}" uib-tooltip="[ifs-distrib-plan] renewal email created">
+						{{ $ctrl.distribPlanEmailCreated }}
+					</a>
+				</td>
+				<td>{{ $ctrl.cmRenewalPmScheduledCount }}</td>
+				<td>
+					<uib-progressbar animate="true"
+					                 value="(($ctrl.distribPlanEmailDistributed | num)  + ($ctrl.distribPlanEmailCancelled | num) + ($ctrl.distribPlanEmailFailedFinal | num))/$ctrl.distribPlanEmailCreated * 100"
+					                 type="info"
+					                 ng-show="$ctrl.distribPlanEmailDistributed > 0 && $ctrl.distribPlanEmailCreated > 0">
+						<b>{{ (((($ctrl.distribPlanEmailDistributed | num)  + ($ctrl.distribPlanEmailCancelled | num) + ($ctrl.distribPlanEmailFailedFinal | num))/$ctrl.distribPlanEmailCreated * 100) | number:1) *1 }}%</b>
+					</uib-progressbar>
+				</td>
+			</tr>
+		</table>
+	</ad-widget-body>
+	<ad-widget-footer>
+		<i class="bi bi-clock"></i> {{ $ctrl.lastCheckDate | date:'HH:mm:ss' }}
+	</ad-widget-footer>
+</ad-widget>

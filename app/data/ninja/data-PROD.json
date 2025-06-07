@@ -1,0 +1,10 @@
+[
+  {
+    "host": "wsprod",
+    "os": "linux",
+    "name": "printserver",
+    "link": "/webservices/printServer/",
+    "source": "Prod",
+    "sourcetype": "printserver"
+  }
+]

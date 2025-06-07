@@ -1,0 +1,75 @@
+<!--{{ $ctrl.data }}-->
+<!--{{ $ctrl.labels }}-->
+<!--{{ $ctrl.series }}-->
+<div class="row">
+	<div class="{{$ctrl.basketsB4QueueChartSize}}">
+		<ad-chart chart-size="$ctrl.basketsB4QueueChartSize"
+		          chart-type="'LineWithLine'"
+		          service="'basketsB4Queue'"
+		          series="'Baskets in DB queue'">
+		</ad-chart>
+	</div>
+	<div class="{{$ctrl.basketsInQueue}}">
+		<ad-hz-chart ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'"
+		             chart-size="$ctrl.basketsInQueue"
+		             chart-type="'LineWithLine'"
+		             service="'basketsInQueue'"
+		             series="'Baskets in HZ queue'"
+		             high-queue-data="$ctrl.highQueueData"
+		             low-queue-data="$ctrl.lowQueueData"
+		             priority-queue-data="$ctrl.priorityQueueData"
+		             boost-queue-data="$ctrl.boostQueueData"
+		             high-baskets-size="$ctrl.highBasketsSize"
+		             low-baskets-size="$ctrl.lowBasketsSize"
+		             priority-baskets-size="$ctrl.priorityBasketsSize"
+		             boost-baskets-size="$ctrl.boostBasketsSize"
+		             high-baskets-date="$ctrl.highBasketsDate"
+		             low-baskets-date="$ctrl.lowBasketsDate"
+		             priority-baskets-date="$ctrl.priorityBasketsDate"
+		             boost-baskets-date="$ctrl.boostBasketsDate">
+		</ad-hz-chart>
+	</div>
+</div>
+<div class="row" ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'">
+	<div class="{{$ctrl.chartSize}}">
+		<ad-widget>
+			<ad-widget-header icon="fa fa-shopping-basket"
+			                  title="Baskets in HZ HIGH queue (size: {{ $ctrl.highBasketsSize }} time: {{ $ctrl.highBasketsDate}}) ">
+			</ad-widget-header>
+			<ad-widget-body>
+				<div ui-grid="{ data: $ctrl.highQueueData }" ui-grid-auto-resize ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+	</div>
+	<div class="{{$ctrl.chartSize}}">
+		<ad-widget>
+			<ad-widget-header icon="fa fa-shopping-basket"
+			                  title="Baskets in HZ LOW queue (size: {{ $ctrl.lowBasketsSize }} time: {{ $ctrl.lowBasketsDate }})">
+			</ad-widget-header>
+			<ad-widget-body>
+				<div ui-grid="{ data: $ctrl.lowQueueData }" ui-grid-auto-resize ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+	</div>
+	<div  class="{{$ctrl.chartSize}}">
+			<ad-widget>
+				<ad-widget-header icon="fa fa-shopping-basket"
+				                  title="Baskets in HZ PRIORITY queue (size: {{ $ctrl.priorityBasketsSize }} time: {{ $ctrl.priorityBasketsDate }})">
+				</ad-widget-header>
+				<ad-widget-body>
+					<div ui-grid="{ data: $ctrl.priorityQueueData }" ui-grid-auto-resize ui-grid-resize-columns></div>
+				</ad-widget-body>
+			</ad-widget>
+		</div>
+
+	<div  class="{{$ctrl.chartSize}}">
+		<ad-widget>
+			<ad-widget-header icon="fa fa-shopping-basket"
+			                  title="Baskets in HZ BOOST queue (size: {{ $ctrl.boostBasketsSize }} time: {{ $ctrl.boostBasketsDate }})">
+			</ad-widget-header>
+			<ad-widget-body>
+				<div ui-grid="{ data: $ctrl.boostQueueData }" ui-grid-auto-resize ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+	</div>
+</div>

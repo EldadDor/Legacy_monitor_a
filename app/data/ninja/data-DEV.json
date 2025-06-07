@@ -1,0 +1,18 @@
+[
+  {
+    "host": "wsdev",
+    "os": "linux",
+    "name": "printserver [ut]",
+    "link": "/USERTEST/webservices/printServer/",
+    "source": "Usertest",
+    "sourcetype": "printserver"
+  },
+  {
+    "host": "wsdev",
+    "os": "linux",
+    "name": "printserver [yest]",
+    "link": "/YEST/webservices/printServer/",
+    "source": "Yest",
+    "sourcetype": "printserver"
+  }
+]

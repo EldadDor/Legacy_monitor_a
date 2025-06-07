@@ -1,0 +1,17 @@
+<div class="input-group">
+	<input type="text" class="form-control datepopup" name="dateField"
+	       uib-datepicker-popup="{{$ctrl.format}}"
+	       ng-model="$ctrl.date"
+	       is-open="$ctrl.popup.opened"
+	       datepicker-options="$ctrl.dateOptions"
+	       required
+	       ng-change="$ctrl.dateChanged()"
+	       close-text="Close"
+	       alt-input-formats="$ctrl.altInputFormats"/>
+	<div class="input-group-prepend">
+		<button type="button" class="btn btn-secondary input-group-text" ng-click="$ctrl.open()">
+			<i class="far fa-calendar-alt"></i>
+		</button>
+	</div>
+</div>
+

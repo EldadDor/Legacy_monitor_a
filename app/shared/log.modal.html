@@ -1,0 +1,30 @@
+<div class="modal-header">
+	<h3 class="modal-title"> {{ $ctrl.server.host }}-{{ $ctrl.server.name }} </h3>
+	<hr>
+	<div ng-if="$ctrl.gridOptions.data === undefined">
+		<label for="logSize">Lines</label>
+		<select id="logSize" ng-model="$ctrl.logSize"
+		        ng-options="linesNumber for linesNumber in $ctrl.logLines"
+		        ng-change="$ctrl.changeLogSize()">
+		</select>
+
+		<i class="btn btn-light fa fa-refresh" ng-click="$ctrl.refreshLog();" uib-tooltip="Refresh log"></i>
+		<ad-loading ng-show="$ctrl.isSearchQueryRunning == true"></ad-loading>
+	</div>
+</div>
+<div class="modal-body">
+	<p ng-bind-html="$ctrl.serverLog"></p>
+</div>
+<div class="modal-body" ng-if="$ctrl.gridOptions.data.length>0">
+	<ad-widget>
+		<ad-widget-header icon="bi bi-list-task" title="{{ $ctrl.title }}"></ad-widget-header>
+		<ad-widget-body>
+			<div id="grid1" ui-grid="$ctrl.gridOptions" class="grid"
+			     ui-grid-auto-resize
+			     ui-grid-resize-columns></div>
+		</ad-widget-body>
+	</ad-widget>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+</div>

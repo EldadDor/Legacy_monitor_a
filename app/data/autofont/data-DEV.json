@@ -1,0 +1,20 @@
+[
+  {
+    "host": "autofontrundev",
+    "name": "autofont-letters",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  },
+  {
+    "host": "afonthtmlrundev",
+    "name": "autofont-html",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  }
+]

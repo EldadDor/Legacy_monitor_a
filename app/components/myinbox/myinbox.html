@@ -1,0 +1,22 @@
+<ad-widget>
+	<ad-widget-body>
+		<form name="sendMessageForm" ng-submit="$ctrl.submitMessage(sendMessageForm)">
+			<div class="form-group">
+				<label for="message">Compose</label>
+				<input id="message" type="text" class="form-control" name="message"
+				       ng-model="$ctrl.message"
+				       placeholder="Enter your message" autofocus required/>
+			</div>
+			<button type="submit" ng-if="$ctrl.isQueryRunning == false"
+			        class="btn btn-primary btn-sm">
+				Submit
+			</button>
+			<ad-loading ng-if="$ctrl.isQueryRunning == true"></ad-loading>
+		</form>
+		<br>
+		<div id="grid1" ng-if="!$ctrl.hideGrid" ui-grid="$ctrl.gridOptions" class="grid"
+		     ui-grid-auto-resize
+		     ui-grid-resize-columns
+		></div>
+	</ad-widget-body>
+</ad-widget>

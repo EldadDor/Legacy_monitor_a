@@ -1,0 +1,20 @@
+[
+  {
+    "host": "pbbatch",
+    "name": "doc-converter [dev]",
+    "executable": false,
+    "sourcetype": "neviaconverter-dev",
+    "source": "dc-dev",
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "distributest",
+    "name": "doc-converter [dev]",
+    "executable": false,
+    "sourcetype": "neviaconverter-dev",
+    "source": "dc-dev",
+    "port": 8282,
+    "link": ""
+  }
+]

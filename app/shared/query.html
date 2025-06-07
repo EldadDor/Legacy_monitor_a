@@ -1,0 +1,56 @@
+<form name="queryForm" role="search" ng-submit="$ctrl.search(queryForm)">
+	<div class="form-group">
+		<div class="form-row align-items-center">
+			<div class="col-auto">
+				<input id="searchKey" class="form-control" name="searchKey" ng-model="$ctrl.searchKey"
+				       placeholder="{{ $ctrl.searchParams[$ctrl.queryCode-1].name }}" autofocus required/>
+			</div>
+			<div class="col-auto">
+				<ad-datepicker date="$ctrl.fromDate"></ad-datepicker>
+			</div>
+			<div class="col-auto">
+				<button type="submit" ng-if="$ctrl.isQueryRunning == false"
+				        class="btn btn-primary btn-sm">
+					{{$ctrl.operation}}
+				</button>
+				<ad-loading ng-show="$ctrl.isQueryRunning == true"></ad-loading>
+			</div>
+<!--			<div class="col-auto">-->
+<!--				<button type="button"-->
+<!--				        ng-show="$ctrl.isQueryRunning == false && $ctrl.gridOptions.data.length>0"-->
+<!--				        ng-click="$ctrl.restoreBaskets()"-->
+<!--				        class="btn btn-primary btn-sm">-->
+<!--					Restore Baskets-->
+<!--				</button>-->
+<!--			</div>-->
+		</div>
+	</div>
+<!--	<div class="form-group">-->
+<!--		<div ng-repeat="searchType in $ctrl.searchParams">-->
+<!--			<label>-->
+<!--				<input type="radio" name="searchType" ng-model="$parent.$ctrl.queryCode"-->
+<!--				       value="{{searchType.id}}"/>-->
+<!--				{{searchType.name}}-->
+<!--			</label>-->
+<!--		</div>-->
+<!--	</div>-->
+</form>
+
+<div id="grid1" ng-if="!$ctrl.hideGrid" ui-grid="$ctrl.gridOptions" class="grid" dir="rtl"
+     ui-grid-auto-resize
+     ui-grid-resize-columns
+     ui-grid-pinning
+     ui-grid-selection
+     ui-grid-edit
+     ui-grid-validate>
+</div>
+<div class="alert alert-danger" role="alert" ng-show="$ctrl.queryErrorFeedback.length">
+	<div ng-repeat="queryErrorFeedback in $ctrl.queryErrorFeedback track by $index">
+		{{ queryErrorFeedback }}
+	</div>
+</div>
+<div class="alert alert-info" role="alert" ng-show="$ctrl.queryInfoFeedback.length">
+	<div ng-repeat="queryInfoFeedback in $ctrl.queryInfoFeedback track by $index">
+		{{ queryInfoFeedback }}
+	</div>
+</div>

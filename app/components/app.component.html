@@ -1,0 +1,56 @@
+<!--<div ng-class="{'bg': !$ctrl.authState.authenticated}">-->
+<div id="page-wrapper" ng-class="{'open': $ctrl.toggleState.toggle}" ng-cloak>
+	<ad-sidebar ng-show="$ctrl.authState.authenticated"></ad-sidebar>
+	<div id="content-wrapper">
+		<ad-toolbar ng-show="$ctrl.authState.authenticated"></ad-toolbar>
+<!--		<div class="universe">-->
+<!--			<div class="stars-canvas">-->
+<!--				<div class="comet-line underline"-->
+<!--				     style="transform: rotate(0deg); width: 105px; top: 255px; left: 630px;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: -129px; top: 160px; &#45;&#45;star-size:7.48191px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:2s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: -106px; top: 227px; &#45;&#45;star-size:6.65119px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: -20px;top: 20px; &#45;&#45;star-size:7.16095px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:5s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 220px; top: 128px; &#45;&#45;star-size:8.87731px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:3s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 315px; top: 73px; &#45;&#45;star-size:4.71729px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 12px; top: 218px; &#45;&#45;star-size:4.15502px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:2s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 510px; top: 50px; &#45;&#45;star-size:6.16291px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:8s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 855px; top: 35px; &#45;&#45;star-size:7.63119px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:2s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 424px; top: 449px; &#45;&#45;star-size:5.45794px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:7s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 387px; top: 515px; &#45;&#45;star-size:8.47346px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 826px; top: 495px; &#45;&#45;star-size:5.20964px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:3s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 865px; top: 487px; &#45;&#45;star-size:7.73778px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 856px; top: 480px; &#45;&#45;star-size:4.45649px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:2s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 1036px; top: 24px; &#45;&#45;star-size:6.88668px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:3s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 1138px; top: 59px; &#45;&#45;star-size:3.18438px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star"-->
+<!--				     style="left: 1087px; top: 86px; &#45;&#45;star-size:3.82742px; &#45;&#45;twinkle-duration:3s; &#45;&#45;twinkle-delay:5s;"></div>-->
+<!--				<div class="asm-s universe-star" style="right: 300px; top: 380px; &#45;&#45;star-size:4.23643px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:5s;"></div>-->
+<!--				<div class="asm-s universe-star star18" style="right: 500px; top: 202px; &#45;&#45;star-size:7.56396px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:4s;"></div>-->
+<!--				<div class="asm-s universe-star star19" style="left: 922px; top: 1522px; &#45;&#45;star-size:70.56396px; &#45;&#45;twinkle-duration:2s; &#45;&#45;twinkle-delay:4s;"></div>-->
+
+				<div class="view-content" ui-view></div>
+			</div>
+		</div>
+		<footer class="navbar-default fixed-bottom">
+			<div class="container-fluid">
+				<span>Admin Dashboard by App Framework Team&copy;</span>
+			</div>
+		</footer>
+	</div>
+</div>
+<!--</div>-->

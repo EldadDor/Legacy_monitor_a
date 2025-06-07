@@ -1,0 +1,240 @@
+<div class="alert control-panel">
+	<button id="runningtBtn" class="btn btn-outline-success btn-sm gradient" type="button" ng-click="$ctrl.runServers();" ng-disabled="!$ctrl.control">
+		Running
+	</button>
+	<button id="stopBtn" class="btn btn-outline-warning btn-sm gradient" type="button" ng-click="$ctrl.idleServers();" ng-disabled="!$ctrl.control">
+		Idle
+	</button>
+	<button id="startBtn" class="btn btn-outline-primary btn-sm gradient" type="button" ng-click="$ctrl.startServers();" ng-disabled="!$ctrl.control" ng-show="$ctrl.type=='astro' || $ctrl.type=='ifs'">
+		Start
+	</button>
+	<button id="shutdownBtn" class="btn btn-outline-danger btn-sm gradient" type="button" ng-click="$ctrl.shutdownServers();" ng-disabled="!$ctrl.control" ng-show="$ctrl.type=='astro' || $ctrl.type=='ifs'">
+		Stop
+	</button>
+	<button id="restartBtn" class="btn btn-outline-info btn-sm gradient" type="button" ng-click="$ctrl.restartServers();" ng-disabled="!$ctrl.control" ng-show="$ctrl.type=='astro' || $ctrl.type=='ifs'">
+		Restart
+	</button>
+	<button id="disableBtn" class="btn btn-outline-secondary btn-sm" type="button"
+	        ng-click="$ctrl.toggleControl($ctrl.control);">{{ $ctrl.control == true ? 'Disable' : 'Enable' }}
+	</button>
+</div>
+
+<ad-widget>
+	<ad-widget-header icon="bi bi-list-task" title="{{ $ctrl.type }} {{ $ctrl.authState.currentEnv }} Servers ({{($ctrl.data|filter:$ctrl.search).length}})">
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text"><i class="fa fa-search"></i></span>
+			</div>
+			<input type="text" class="form-control" placeholder="Search" ng-model="$ctrl.search">
+		</div>
+	</ad-widget-header>
+	<ad-widget-body classes="no-padding">
+		<div class="table-responsive">
+		<table class="table table-hover results">
+			<thead>
+			<tr ng-show="($ctrl.data | filter:$ctrl.search).length != 0">
+				<th scope="col">
+					<input type="checkbox" ng-model="$ctrl.allSelected" ng-click="$ctrl.checkAll()" ng-disabled="!$ctrl.control"/>
+				</th>
+				<th scope="col">
+					<a href="" ng-click="$ctrl.sortType='host'; $ctrl.sortReverse = !$ctrl.sortReverse">
+						Host
+						<span ng-show="$ctrl.sortType=='host'" class="fa" ng-class="$ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+					</a>
+				</th>
+				<th scope="col">
+					<a href="" ng-click="$ctrl.sortType='name'; $ctrl.sortReverse = !$ctrl.sortReverse">
+						Server
+						<span ng-show="$ctrl.sortType=='name'" class="fa" ng-class="$ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+					</a>
+				</th>
+				<th scope="col">
+					<a href="" ng-click="$ctrl.sortType='status'; $ctrl.sortReverse = !$ctrl.sortReverse">
+						Status
+						<span ng-show="$ctrl.sortType=='status'" class="fa" ng-class="$ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+					</a>
+				</th>
+				<th scope="col">
+					<i class="bi bi-clock"></i>
+				</th>
+			</tr>
+			<tr ng-show="($ctrl.data | filter:$ctrl.search).length == 0" class="bg-warning">
+				<td colspan="5"> No result</td>
+			</tr>
+			</thead>
+			<tbody ng-repeat="server in $ctrl.data | orderBy:$ctrl.sortType:$ctrl.sortReverse | filter:$ctrl.search">
+			<tr>
+				<th scope="row">
+					<input type="checkbox" ng-model="server.control" ng-disabled="!$ctrl.control || server.executable != null"/>
+				</th>
+				<td>
+					<span ng-class="server.os=='linux' ? 'bi-linux-idi' : 'bi-windows-idi'">
+						<i ></i>
+						{{server.host}}
+					</span>
+<!--					<span style="white-space: nowrap;">-->
+<!--						<i class="bi" ng-class="server.os=='linux' ? 'bi-linux-idi' : 'bi-windows'"></i>-->
+<!--						{{server.host}}-->
+<!--					</span>-->
+				</td>
+				<td>
+					<a ng-href="http://searcher:8000/en-US/app/idi/search?q=search index=distrib host={{server.host}} source={{server.source}} sourcetype={{server.sourcetype}}" target="_blank">
+						{{ server.name }}
+					</a>
+					<a href="" ng-show="server.jobs.length>1" ng-click="server.jobs.toggle = !server.jobs.toggle">
+						(<i ng-show="!server.jobs.toggle" class="fas fa-chevron-down" style="font-size: 11px"></i><i ng-show="server.jobs.toggle" class="fas fa-chevron-up" style="font-size: 11px"></i>{{ server.jobs.length }})
+						<!--<i class="fas fa-arrow-alt-circle-down"></i>-->
+						<!--<i class="far fa-arrow-alt-circle-down"></i>-->
+						<!--<i class="fas fa-arrow-down"></i>-->
+						<!--<i class="fas fa-chevron-down"></i>-->
+					</a>
+				</td>
+				<td>
+					<div ng-show="server.status != null">
+						<button class="btn btn-sm btn-{{ server.cssClass }} status"
+						        ng-click="$ctrl.switchServerRunningState(server)"
+								ng-disabled="!$ctrl.control || server.executable != null">
+							{{ server.status }}
+						</button>
+						<a href="" uib-tooltip-template="'app/shared/tooltipTemplate.html'"
+						      tooltip-trigger="'outsideClick'">
+							<i class="far fa-eye" aria-hidden="true"></i>
+						</a>
+						<a href="" ng-click="$ctrl.showServerLog(server)" target="_blank" uib-tooltip="Server log">
+							<i class="far fa-file-alt" aria-hidden="true" ng-show="server.isSearchQueryRunning != true"></i>
+							<ad-loading ng-show="server.isSearchQueryRunning == true"></ad-loading>
+						</a>
+						<a href="http://{{server.host}}:{{server.port}}/webservices/AstroServer/Hazelcast/ServersInformation/" ng-if="$ctrl.type=='astro'" target="_blank" uib-tooltip="Cluster Information">
+							<i class="bi bi-info-circle"></i>
+						</a>
+						<a href="http://{{server.host}}:{{server.port}}/webservices/monitoring/getThreads/APP" ng-if="$ctrl.type=='astro' || $ctrl.type=='ifs'" target="_blank" uib-tooltip="Get Application Threads">
+							<i style="font-weight: bold">T</i>
+						</a>
+						<span ng-class="{'badge badge-pill' : server.tasksCounter!=null}" uib-tooltip="Tasks in execution">
+							{{ server.tasksCounter }} <span ng-show="server.totalTasksCounter>0">/ {{ server.totalTasksCounter }}</span>
+						</span>
+						<span class="badge badge-pill red-bg" ng-show="server.errorMessageCount>0" uib-tooltip="Failed emails in ERROR-MAILS folder">
+							{{ server.errorMessageCount }}
+						</span>
+						<select ng-if="$ctrl.type=='ninja'"
+						        ng-model="server.psJobType"
+						        ng-options="jobType for jobType in $ctrl.psJobTypes"
+						        ng-change="$ctrl.changeJobType(server)"
+						        ng-disabled="!$ctrl.control">
+						</select>
+						<select ng-if="$ctrl.type=='ninja'"
+						        ng-model="server.psLimit"
+						        ng-options="number for number in [100,200,300,400,500,600,700,800,900,1000]"
+						        ng-change="$ctrl.setNumOfPolicies(server)"
+						        ng-disabled="!$ctrl.control">
+						</select>
+						<!--<span ng-if="$ctrl.authState.getCurrentDataSource()!='USERTEST'" ng-class="{'badge' : server.priority}"> {{ server.priority }} </span>-->
+						<!--<select ng-if="$ctrl.type=='astro' && server.priority != null && server.name === 'astro [ut]'"-->
+						        <!--ng-model="server.priority"-->
+						        <!--ng-class="$ctrl.styleOptions[server.priority]"-->
+						        <!--ng-options="priority for priority in $ctrl.utQueueTypes"-->
+						        <!--ng-change="$ctrl.changePriority(server)"-->
+						        <!--ng-disabled="!$ctrl.control">-->
+						<!--</select>-->
+						<select ng-if="$ctrl.type=='astro' && server.priority != null"
+						        ng-model="server.priority"
+						        ng-class="$ctrl.styleOptions[server.priority]"
+						        ng-options="priority for priority in $ctrl.queueTypes"
+						        ng-change="$ctrl.changePriority(server)"
+						        ng-disabled="!$ctrl.control">
+						</select>
+						<select ng-if="$ctrl.type=='ifs' && (server.name.startsWith('cm-sms') || server.name.startsWith('cm-pm') || server.name.startsWith('twilio-distrib'))"
+						        ng-model="server.boostMode"
+						        ng-options="boostMode for boostMode in $ctrl.boostModes"
+						        ng-disabled="!$ctrl.control">
+						</select>
+						<!--						        ng-change="$ctrl.controlServer(server, operation.link, server.boostMode)"-->
+						<!--<span ng-if="server.fetcher && $ctrl.authState.getCurrentDataSource()!='USERTEST'" ng-class="{'badge' : server.fetcher}">-->
+							<!--FETCHER-->
+						<!--</span>-->
+						<button class="btn btn-sm status" ng-if="$ctrl.type=='astro' && server.fetcher != null"
+						      ng-class="server.fetcher ? 'btn-info' : 'btn-secondary'"
+						      ng-click="$ctrl.switchFetcher(server)"
+					          ng-disabled="!$ctrl.control">
+							FETCHER
+						</button>
+						<button ng-repeat="operation in server.operations" class="btn btn-sm  btn-secondary"
+						        ng-click="$ctrl.controlServer(server, operation.link)"
+						        uib-tooltip="{{ operation.description }}">
+							{{ operation.name }}
+						</button>
+						<span ng-class="{'badge badge-pill durations-badge' : server.withdrawalDurations}"
+						      ng-click="server.withdrawalDurationsToggle = !server.withdrawalDurationsToggle"
+						      uib-tooltip="withdrawal duration">
+							<i class="fa-solid fa-w" ng-if="server.withdrawalDurations"></i>
+						</span>
+						<div ng-show="server.withdrawalDurationsToggle" class="queue-durations">
+							<span class="font-weight-bolder">Withdrawal Durations</span>
+							<table>
+							<tr ng-repeat="(key, value)  in server.withdrawalDurations">
+								<td>{{key}}</td>
+	<!--							ng-if="$ctrl.type=='astro' && server.priority != 'NONE' && server.priority !=null"-->
+								<td>
+									<select ng-model="server.withdrawalDurations[key]"
+								        ng-options="withdrawalSpeed for withdrawalSpeed in $ctrl.withdrawalSpeeds"
+								        ng-change="$ctrl.changeWithdrawalDuration(server, key)"
+								        ng-disabled="!$ctrl.control">
+									</select>
+								</td>
+							</tr>
+						</table>
+						</div>
+						<span ng-class="{'badge badge-pill durations-badge' : server.fetchDurations && server.fetcher}"
+						      ng-click="server.fetchDurationsToggle = !server.fetchDurationsToggle"
+						      uib-tooltip="fetch duration">
+							<i class="fa-solid fa-f" ng-if="server.fetchDurations && server.fetcher"></i>
+						</span>
+						<div ng-show="server.fetchDurationsToggle" class="queue-durations">
+							<span class="font-weight-bolder">Fetch Durations</span>
+							<table>
+								<tr ng-repeat="(key, value)  in server.fetchDurations" ng-show="server.fetchDurationsToggle">
+									<td>{{key}}</td>
+									<td>
+										<select ng-model="server.fetchDurations[key]"
+										        ng-options="fetchSpeed for fetchSpeed in $ctrl.fetchSpeeds"
+										        ng-change="$ctrl.changeFetchDuration(server, key)"
+										        ng-disabled="!$ctrl.control">
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<ad-loading ng-show="server.status == null"></ad-loading>
+				</td>
+				<!--<td> {{date | date:'yyyy-MM-dd HH:mm:ss'}}</td>-->
+				<td> {{ server.lastUpdatedDate | date:'HH:mm:ss' }}</td>
+			</tr>
+			<tr ng-show="server.jobs.toggle" ng-repeat="job in server.jobs">
+				<td colspan="3">
+					{{ job["description"] }}
+				</td>
+				<td colspan="2">
+					<button class="btn btn-sm btn-{{ job.cssClass }} status"
+					        ng-click="$ctrl.switchJobRunningState(server, job)"
+					        ng-disabled="!$ctrl.control || server.executable != null">
+						{{ job.status }}
+					</button>
+					<input ng-if="$ctrl.type=='ifs' && server.name.startsWith('generaltasks') && job.id=='printeryDailyFileHandler'"
+					        ng-model="server.triggerTime"
+					        maxlength="5"
+					        style="width: 40px;"
+					        ng-disabled="!$ctrl.control"/>
+					<button ng-repeat="jobOperation in job.operations" class="btn btn-sm  btn-secondary"
+					        ng-click="$ctrl.controlServer(server, jobOperation.link)"
+					        uib-tooltip="{{ jobOperation.description }}">
+						{{ jobOperation.name }}
+					</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		</div>
+	</ad-widget-body>
+</ad-widget>
+

@@ -1,0 +1,97 @@
+.badge-bell {
+	position: relative;
+	top: -12px;
+	left: 30px;
+    padding: .25em .4em;
+}
+.toolbar {
+	-webkit-box-shadow: #9fa7b2 0px 2px 0px 0px;
+	box-shadow: #9fa7b2 0px 2px 0px 0px;
+	border-bottom: 1px solid #9fa7b2;
+	min-height: 58px;
+	background: #fff;
+	margin-bottom: 20px
+}
+
+/*.toolbar > div:last-child {*/
+	/*padding-right: 0*/
+/*}*/
+
+/*.toolbar .meta .page {*/
+	/*font-size: 17px;*/
+	/*padding-top: 11px*/
+/*}*/
+
+/*.toolbar .meta .breadcrumb-links {*/
+	/*font-size: 10px*/
+/*}*/
+
+/*.toolbar .meta div {*/
+	/*white-space: nowrap;*/
+	/*overflow: hidden;*/
+	/*text-overflow: ellipsis*/
+/*}*/
+
+/*.toolbar .login a {*/
+	/*padding: 18px;*/
+	/*display: block*/
+/*}*/
+
+.toolbar img  {
+	width: 20px;
+	height: 20px;
+	filter: grayscale(100%);
+}
+.toolbar .fa-history {
+	font-size: 20px;
+}
+
+.toolbar .nav-item {
+	/*display: inline-block;*/
+	/*text-align: center;*/
+	/*vertical-align: middle;*/
+	padding-right: 15px;
+}
+
+.toolbar .user >  a {
+	color: #919191;
+	/*display: block*/
+}
+
+.toolbar .user .nav-link > i {
+	font-size: 20px;
+}
+
+.toolbar .user .nav-link > img {
+	width: 50px;
+	height: 50px;
+	border-radius: 2px
+}
+
+
+/*.navbar-nav {*/
+	/*margin: 0;*/
+/*}*/
+.horizontal-collapse {
+	height: 70px;
+}
+
+.navbar-collapse.in {
+	overflow-y: hidden;
+}
+
+/*.navbar-nav > li > button {*/
+  /*margin: 10px 0;*/
+/*}*/
+
+/*.navbar-brand {*/
+	/*padding: 5px;*/
+	/*height: 60px;*/
+/*}*/
+/*.navbar-nav > li {*/
+	/*padding-right: 15px;*/
+/*}*/
+/*.navbar-brand > img {*/
+    /*max-height: 48px;*/
+/*}*/
+

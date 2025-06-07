@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-lg-12">
+		<uib-accordion close-others="$ctrl.oneAtATime">
+			<ad-widget>
+				<div uib-accordion-group class="" is-open="$ctrl.status.isFirstOpen"
+				     is-disabled="$ctrl.status.isFirstDisabled">
+					<uib-accordion-heading>
+						<ad-widget-header icon="fa fa-database" title="איתור סלים"></ad-widget-header>
+					</uib-accordion-heading>
+					<ad-widget-body>
+						<ad-bs-query operation="'Search Baskets'"></ad-bs-query>
+					</ad-widget-body>
+				</div>
+			</ad-widget>
+			<ad-widget ng-if="!$ctrl.authState.isProd()">
+				<div uib-accordion-group class="">
+					<uib-accordion-heading>
+						<ad-widget-header icon="fa fa-database" title="שחזור סלים"></ad-widget-header>
+					</uib-accordion-heading>
+					<ad-widget-body>
+						<ad-br-query operation="'Redistribute Baskets'"></ad-br-query>
+					</ad-widget-body>
+				</div>
+			</ad-widget>
+			<ad-widget ng-if="!$ctrl.authState.isProd()">
+				<div uib-accordion-group class="">
+					<uib-accordion-heading>
+						<ad-widget-header icon="fa fa-database" title="החרגת משתמש"></ad-widget-header>
+					</uib-accordion-heading>
+					<ad-widget-body>
+						<ad-exclude-user-query operation="'Exclude User'"></ad-exclude-user-query>
+					</ad-widget-body>
+				</div>
+			</ad-widget>
+		</uib-accordion>
+	</div>
+</div>
+
+

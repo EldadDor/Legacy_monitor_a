@@ -1,0 +1,888 @@
+[
+  {
+    "host": "pbbatch",
+    "name": "iso [ut]",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "link": "/webservices/IfsJobServer/",
+    "source": "iso-ut",
+    "sourcetype": "ifs-dev",
+    "jobs": [
+      {
+        "description": "שליחת שאילתות iso",
+        "context": "ifs-iso.xml",
+        "rate": "every 200 minutes",
+        "id": "isoBatchSenderJob"
+      },
+      {
+        "description": "שליפת נכשלים/חידושים",
+        "context": "ifs-iso.xml",
+        "rate": "at 06:00am every day",
+        "id": "isoBatchFetcherJob"
+      }
+    ]
+  },
+  {
+    "host": "pbbatch2",
+    "name": "casefet [ut]",
+    "port": 8680,
+    "debug": 8186,
+    "jmx": 23006,
+    "link": "/webservices/",
+    "source": "casefet-ut",
+    "sourcetype": "ifs-dev",
+    "executable": false
+  },
+  {
+    "host": "pbbatch2",
+    "name": "ifs-img-fuse [ut]",
+    "port": 8480,
+    "debug": 8184,
+    "jmx": 23004,
+    "jobs": [
+      {
+        "description": "מאחד תמונות לtif",
+        "context": "ifs-image-fuse-context.xml",
+        "rate": "online",
+        "input": "producer"
+      }
+    ],
+    "source": "image-fuse",
+    "sourcetype": "ifs",
+    "executable": false,
+    "link": "/webservices/"
+  },
+
+  {
+    "host": "pbbatch2",
+    "name": "image-opts [ut]",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "jobs": [
+      {
+        "description": "משיכת קבצים מ ADA",
+        "context": "ifs-image-opts-context.xml",
+        "rate": "online",
+        "input": "ws"
+      }
+    ],
+    "link": "",
+    "source": "image-opts",
+    "sourcetype": "ifs",
+    "executable": false
+  },
+  {
+    "host": "pbbatch3",
+    "name": "shamait [ut]",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "source": "shamait-ut",
+    "sourcetype": "ifs-dev",
+    "description": "קטלוג מסמכים שמגיעים משמאית",
+    "executable": false
+  },
+  {
+    "host": "pbbatch3",
+    "name": "datacar [ut]",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "link": "/webservices/IfsServer/",
+    "source": "datacar-ut",
+    "sourcetype": "ifs-dev",
+    "jobs": [
+      {
+        "description": "קטלוג מסמכים שמגיעים מדטקאר",
+        "context": "Ifs-datacar-si.xml",
+        "rate": "online",
+        "input": "path=//datacarapp/D/Dcwin/Inout/In"
+      }
+    ]
+  },
+  {
+    "host": "distribuyest",
+    "name": "cm-distrib-plan [yest]",
+    "port": 8880,
+    "debug": 8188,
+    "jmx": 23008,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "תזמון הפצות",
+        "context": "ifs-cm-distrib-plan.xml",
+        "rate": "SUN-FRI every 1 min from 7:00AM to 9:00PM",
+        "input": "table=CO_CAMPAIGN"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "distrib-plan-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "distribuqa",
+    "name": "pmr [train]",
+    "port": 8480,
+    "debug": 8184,
+    "jmx": 23004,
+    "emailAccountUser": "pmtraining",
+    "emailAccountName": "pm [train]",
+    "emailAccountDsc": "מייל אישי",
+    "jobs": [
+      {
+        "description": "שרת קבלה-מייל אישי",
+        "context": "ifs-pm-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Personal Mailbox TRAINING(pmtraining)"
+      }
+    ],
+    "operations": [
+      {
+        "link": "Pmr/resetAlreadyParsedEmails",
+        "name": "Reset Duplicates",
+        "description": "reset duplicates before moving error mails to inbox"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "pmr-training",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "distribuqa",
+    "name": "pfr-faxack [train]",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "link": "/webservices/IfsServer/",
+    "source": "pfr-training",
+    "sourcetype": "ifs-dev",
+    "jobs": [
+      {
+        "description": "שרת קבלה-פקס אישי",
+        "context": "ifs-pf-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Personal Fax TRAINING (pmfaxtrain)"
+      }
+    ],
+    "emailAccountUser": "pmfaxtrain",
+    "emailAccountName": "pf [train]",
+    "emailAccountDsc": "פקס אישי"
+  },
+  {
+    "host": "distribuqa",
+    "name": "wizsupport [train]",
+    "port": 8280,
+    "debug": 8182,
+    "jmx": 23002,
+    "jobs": [
+      {
+        "description": "תביעה מקוונת - קטלוג קבצי לקוח",
+        "context": "ifs-wizsupport-integration.xml",
+        "rate": "every 100 seconds"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "wizsupport-training",
+    "sourcetype": "ifs-dev"
+  },
+  {
+     "host": "distributest",
+     "name": "pmr [test]",
+     "port": 8480,
+     "debug": 8184,
+     "jmx": 23004,
+     "link": "/webservices/IfsServer/",
+     "jobs": [
+       {
+         "description": "שרת קבלה-מייל אישי",
+         "context": "ifs-pm-receiver-integration.xml",
+         "rate": "online",
+         "input": "mailbox=Personal Mailbox TEST(pmtest)"
+       }
+     ],
+     "operations": [
+       {
+         "link": "Pmr/resetAlreadyParsedEmails",
+         "name": "Reset Duplicates",
+         "description": "reset duplicates before moving error mails to inbox"
+       }
+     ],
+     "emailAccountUser": "pmtest",
+     "emailAccountName": "pm [test]",
+     "emailAccountDsc": "מייל אישי",
+     "source": "pmr-test",
+     "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "twilio-receiver [ut]",
+    "deployName": "twilio-receiver",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "os": "linux",
+    "link": "/webservices/IfsServer/",
+    "jobs": [
+      {
+        "description": "WA שרת קבלה-קבצים",
+        "context": "ifs-tw-files-receiver.xml",
+        "rate": "online [5s]",
+        "input": "table=TW_WHATSAPP_FILES",
+        "id": "twFilesJdbcAdapter"
+      },
+      {
+        "description": "WA שרת קבלה-קבצי שמע",
+        "context": "ifs-tw-files-receiver.xml",
+        "rate": "online [5s]",
+        "input": "table=TW_WHATSAPP_FILES",
+        "id": "twAudioFilesJdbcAdapter"
+      },
+      {
+        "description": "WA קטלוג ידני של קבצי",
+        "context": "ifs-tw-files-receiver.xml",
+        "rate": "online [5s]",
+        "input": "table=TW_WHATSAPP_FILES",
+        "id": "twFilesManualCatalogJdbcAdapter"
+      },
+      {
+        "description": "שרת קבלה-דוחות twilio",
+        "context": "ifs-tw-files-receiver.xml",
+        "rate": "online [30s]",
+        "input": "mailbox=twilio_reports_dev",
+        "id": "twilioReportsImapAdapter"
+      }
+    ],
+    "source": "twilio-receiver-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "twilio-tasks [ut]",
+    "deployName": "twilio-tasks",
+    "port": 8280,
+    "debug": 8182,
+    "jmx": 23002,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "WhatsApp delivery hourly tracking",
+        "context": "ifs-tw-track-delivery.xml",
+        "rate": "at minute :30",
+        "input": "table=M_SRV_PRN",
+        "id": "waDeliveryHourlyTracker"
+      },
+      {
+        "description": "WhatsApp delivery daily tracking",
+        "context": "ifs-tw-track-delivery.xml",
+        "rate": "at 05am",
+        "input": "table=M_SRV_PRN",
+        "id": "waDeliveryDailyTracker"
+      },
+      {
+        "description": "Submit templates for approval, sync PROD->QA",
+        "context": "ifs-tw-templates.xml",
+        "rate": "every hour",
+        "input": "Content Api",
+        "id": "twTemplatesSubmitJob"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "twilio-tasks-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "pfr-faxack [ut]",
+    "deployName": "pfr",
+    "port": 8380,
+    "debug": 8183,
+    "jmx": 23003,
+    "os": "linux",
+    "link": "/webservices/IfsServer/",
+    "source": "pfr-ut",
+    "sourcetype": "ifs-dev",
+    "jobs": [
+      {
+        "description": "שרת קבלה-פקס אישי",
+        "context": "ifs-pf-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Personal Fax TESt (pmfaxtest)",
+        "id": "pfImapAdapter"
+      },
+      {
+        "description": "שרת קבלה-אישורי פקס",
+        "context": "ifs-pf-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Fax ack ut (faxackut)",
+        "id": "faxAckImapAdapter"
+      }
+    ],
+    "emailAccountUser": "pmfaxtest",
+    "emailAccountName": "pf [ut]",
+    "emailAccountDsc": "פקס אישי"
+  },
+  {
+    "host": "ifsut01",
+    "name": "pmr [ut]",
+    "deployName": "pmr",
+    "port": 8480,
+    "debug": 8184,
+    "jmx": 23004,
+    "os": "linux",
+    "link": "/webservices/IfsServer/",
+    "jobs": [
+      {
+        "description": "שרת קבלה-מייל אישי",
+        "context": "ifs-pm-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Personal Mailbox USERTEST(pmut)"
+      }
+    ],
+    "operations": [
+      {
+        "link": "Pmr/resetAlreadyParsedEmails",
+        "name": "Reset Duplicates",
+        "description": "reset duplicates before moving error mails to inbox"
+      }
+    ],
+    "emailAccountUser": "pmut",
+    "emailAccountName": "pm [ut]",
+    "emailAccountDsc": "מייל אישי",
+    "source": "pmr-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "returned-mail [ut]",
+    "deployName": "returned-mail",
+    "port": 8680,
+    "debug": 8186,
+    "jmx": 23006,
+    "os": "linux",
+    "link": "/webservices/IfsServer/",
+    "source": "returned-ut",
+    "sourcetype": "ifs-dev",
+    "jobs": [
+      {
+        "description": "מיילים שגויים",
+        "context": "ifs-returned-resend-mail-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Returned Mail(returnedmailut)"
+      }
+    ],
+    "emailAccountUser": "returnedmailut",
+    "emailAccountName": "returned [ut]",
+    "emailAccountDsc": "מיילים שגויים"
+  },
+  {
+    "host": "ifsut01",
+    "name": "pm-cataloger [ut]",
+    "deployName": "pm-cataloger",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת העברה לקטלוג",
+        "context": "ifs-personal-mail-cataloger.xml",
+        "rate": "SUN-THU every 5 min from 6:00AM to 11:00PM",
+        "input": "table=M_PERSONAL_MAIL_FILES_PAGES",
+        "id": "personalMailAdaCataloger"
+      },
+      {
+        "description": "שרת העברה לקטלוג - נכשלים",
+        "context": "ifs-personal-mail-cataloger.xml",
+        "rate": "at 12:00AM, SUN,TUE",
+        "input": "table=M_PERSONAL_MAIL_FILES_PAGES",
+        "id": "personalMailFailedAdaCataloger"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "pm-cataloger-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "iso-cataloger [ut]",
+    "deployName": "iso-cataloger",
+    "port": 8880,
+    "debug": 8188,
+    "jmx": 23008,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "קטלוג תביעות ISO",
+        "context": "ifs-iso-catalog-integration.xml",
+        "rate": "every 6 min",
+        "input": "mailbox=iso"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "iso-cataloger-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut01",
+    "name": "wizsupport [ut]",
+    "deployName": "wizsupport",
+    "port": 8980,
+    "debug": 8189,
+    "jmx": 23009,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "תביעה מקוונת - קטלוג קבצי לקוח",
+        "context": "ifs-wizsupport-integration.xml",
+        "rate": "every 100 seconds"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "wizsupport-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "cm-pm [ut]",
+    "deployName": "cm-pm",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים-מייל אישי",
+        "context": "ifs-cm-pm-operation.xml",
+        "rate": "SUN-FRI every 5 min from 7:00AM to 9:00PM",
+        "input": "table=CM_PM_HEADER"
+      }
+    ],
+    "operations": [
+      {
+        "link": "CM/setPoolSize",
+        "name": "Set Boost Mode",
+        "description": "set task executor pool size"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "cm-pm-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "cm-sms [ut]",
+    "deployName": "cm-sms",
+    "port": 8280,
+    "debug": 8182,
+    "jmx": 23002,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים-SMS",
+        "context": "ifs-cm-sms-context.xml",
+        "rate": "every 20 seconds",
+        "input": "table=CM_SMS_HEADER"
+      }
+    ],
+    "operations": [
+      {
+        "link": "CM/setPoolSize",
+        "name": "Set Boost Mode",
+        "description": "set task executor pool size"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "cm-sms-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "cm-printery [ut]",
+    "deployName": "cm-printery",
+    "port": 8380,
+    "debug": 8183,
+    "jmx": 23003,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים - דואר",
+        "context": "ifs-cm-printery-operation.xml",
+        "rate": "SUN-FRI every 5 min from 7:00AM to 9:00PM",
+        "input": "table=CM_PRINTERY_HEADER"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "cm-printery-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "cm-distrib-plan [ut]",
+    "deployName": "cm-distrib-plan",
+    "port": 8480,
+    "debug": 8184,
+    "jmx": 23004,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "תזמון הפצות",
+        "context": "ifs-cm-distrib-plan.xml",
+        "rate": "SUN-FRI every 1 min from 7:00AM to 9:00PM",
+        "input": "table=CO_CAMPAIGN"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "distrib-plan-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "auto-distrib [ut]",
+    "deployName": "auto-distrib",
+    "port": 8680,
+    "debug": 8186,
+    "jmx": 23006,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים - רגולציה",
+        "context": "ifs-cm-auto-distrib-operation.xml",
+        "rate": "SUN-FRI every 5 min from 7:00AM to 9:00PM",
+        "input": "table=CM_AUTO_DISTRIB_HEADER"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "auto-distrib-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "twilio-distrib [ut]",
+    "deployName": "twilio-distrib",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "הפצת קמפיין WA",
+        "context": "ifs-cm-wa.xml",
+        "rate": "online",
+        "input": "path=\\\\nacenter2\\test\\Astro\\CM\\wa",
+        "id": "cmWaFilesInAdapter"
+      }
+    ],
+    "operations": [
+      {
+        "link": "CM/setPoolSize",
+        "name": "Set Boost Mode",
+        "description": "set task executor pool size"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "twilio-distrib-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut02",
+    "name": "generaltasks-emka-orgtree [ut]",
+    "deployName": "generaltasks",
+    "port": 8880,
+    "debug": 8188,
+    "jmx": 23008,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "עדכון תקשורת שיווקית",
+        "context": "ifs-general-task-scheduler-operation.xml",
+        "rate": "at 1:00AM every day",
+        "id": "handleTlmrkService",
+        "input": "table"
+      },
+      {
+        "description": "מחיקת תיעוד עיקולים",
+        "context": "ifs-general-task-scheduler-operation.xml",
+        "rate": "at 2:00AM every day",
+        "id": "handleForeclosuresService",
+        "input": "table"
+      },
+      {
+        "description": "עדכון שימוש נתוני הר ביטוח",
+        "context": "ifs-general-task-scheduler-operation.xml",
+        "rate": "at 3:00AM every day",
+        "id": "handleVrfHarBituahService",
+        "input": "table"
+      },
+      {
+        "description": "handleCMBodyService",
+        "context": "ifs-general-task-scheduler-operation.xml",
+        "rate": "at 04:00AM, every day starting on the 1st",
+        "id": "handleCMBodyService",
+        "input": "table"
+      },
+      {
+        "description": "סגירת מעגל טיפול - משימות בסיכון",
+        "context": "ifs-general-task-scheduler-operation.xml",
+        "rate": "every 2 hours between hours 06am and 10pm, every day between Sun and Fri",
+        "id": "odemSetMessagesAtRiskService",
+        "input": "table"
+      },
+      {
+        "description": "ממשק דלתאות – עדכון שינויים בעץ הארגוני",
+        "context": "ifs-organization-tree-copy-operation.xml",
+        "rate": "at 07am, 10am, 12pm and 03pm, every day between Sun and Thu",
+        "input": "table=SAP_RUN",
+        "id": "organizationTreeCopyService"
+      },
+      {
+        "description": "ממשק אודם לטיפול בשינויים בעץ הארגוני",
+        "context": "ifs-odem-handle-organization-tree-copy.xml",
+        "rate": "at minute :40, at 08am, 10am, 02pm, 03pm, 06pm and 07pm, every day between Sun and Thu",
+        "input": "table=ODEM_SAP_RUN, MD_ODEM_SAP_RUN",
+        "id": "odemOrgTreeCopyHandler"
+      },
+      {
+        "description": "הסרת לקוחות מרשימת דיוור אינפוריו",
+        "context": "ifs-inforu-unsubscriber.xml",
+        "rate": "at 3:00AM every day",
+        "input": "ws=capi.inforu.co.il"
+      },
+      {
+        "description": "העברת הפצות דואר לאמקה (בית דפוס)",
+        "context": "ifs-yashir-to-emka.xml",
+        "rate": "at 8:30PM every day",
+        "input": "table=M_SRV_PRN, srv_activity=9",
+        "id": "printeryDailyFileHandler",
+        "operations": [
+          {
+            "link": "Printery/reschedule",
+            "name": "Reschedule",
+            "description": "reschedule task trigger {hh:mm}"
+          }
+        ]
+      },
+      {
+        "description": "מהלך קליטת מכתבים שנכשלו באמקה (בית דפוס)",
+        "context": "emka-to-yashir.xml",
+        "rate": "at 04pm, Sun-Fri",
+        "input": "path=v:\\CyberArk\\Emka\\EmkaToYashir\\Feedback\\"
+      },
+      {
+        "description": "מנקה מיילים ישנים מתיבות גיבוי",
+        "context": "*ifs-mailboxes-cleaner.xml",
+        "rate": "at 00:00am, Sun-Thu"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "general-tasks-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut03",
+    "name": "invoke-services [ut]",
+    "deployName": "invoke-services",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "הפעלת שירותי JAVA דרך SP - יצירת כיתובי לקוח לארועים אוטומטים",
+        "context": "ifs-invoke-services-integration.xml",
+        "rate": "every 5 minutes",
+        "input": "M_INVOKE_* tables"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "invoke-services-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsut03",
+    "name": "smiley-abandonedcalls [ut]",
+    "deployName": "smiley-survey",
+    "port": 8680,
+    "debug": 8186,
+    "jmx": 23006,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שליחת התראה סמיילי עצוב למנהל: מיילים",
+        "context": "ifs-pm-smiley-survey.xml",
+        "rate": "every 3 minutes",
+        "input": "table=M_SERVICE_SURVEY_ANSWERS",
+        "id": "pmSmileyAlertsJob"
+      },
+      {
+        "description": "שליחת התראה סמיילי עצוב למנהל: מסרונים",
+        "context": "ifs-sms-smiley-survey.xml",
+        "rate": "every 3 minutes",
+        "input": "table=M_SERVICE_SURVEY_ANSWERS",
+        "id": "smsSmileyAlertsJob"
+      },
+      {
+        "description": "שליחת הודעת SMS בננטשות",
+        "context": "ifs-cti-abandoned-calls.xml",
+        "rate": "every 10 minutes between 08am and 10pm, Sun-Thu",
+        "input": "table=M_PERSONAL_MAIL_CALL_ROUTER",
+        "id": "ctiAbandonedCallsHandler"
+      },
+      {
+        "description": "משימות חייגן",
+        "context": "ifs-cti-abandoned-calls.xml",
+        "rate": "every 5 minutes between 07am and 08pm, Sun-Fri",
+        "input": "sp=MANUALLY_HANDLE_DAILER_CALLS",
+        "id": "dailerCallsService"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "smiley-survey-ut",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "auto-distrib [yest]",
+    "deployName": "auto-distrib",
+    "port": 8180,
+    "debug": 8181,
+    "jmx": 23001,
+    "os": "linux",
+    "link": "/webservices/IfsJobServer/",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים - רגולציה",
+        "context": "ifs-cm-auto-distrib-operation.xml",
+        "rate": "SUN-FRI every 5 min from 7:00AM to 9:00PM",
+        "input": "table=CM_AUTO_DISTRIB_HEADER"
+      }
+    ],
+    "source": "auto-distrib-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "cm-pm [yest]",
+    "deployName": "cm-pm",
+    "port": 8280,
+    "debug": 8182,
+    "jmx": 23002,
+    "os": "linux",
+    "link": "/webservices/IfsServer/",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים-מייל אישי",
+        "context": "ifs-cm-pm-operation.xml",
+        "rate": "SUN-FRI every 5 min from 7:00AM to 9:00PM",
+        "input": "table=CM_PM_HEADER"
+      }
+    ],
+    "source": "cm-pm-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "cm-sms [yest]",
+    "deployName": "cm-sms",
+    "port": 8380,
+    "debug": 8183,
+    "jmx": 23003,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת קמפיינים-SMS",
+        "context": "ifs-cm-sms-context.xml",
+        "rate": "every 20 seconds",
+        "input": "table=CM_SMS_HEADER"
+      }
+    ],
+    "operations": [
+      {
+        "link": "CM/setPoolSize",
+        "name": "Set Boost Mode",
+        "description": "set task executor pool size"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "cm-sms-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "pmr [yest]",
+    "deployName": "pmr",
+    "port": 8480,
+    "debug": 8184,
+    "jmx": 23004,
+    "os": "linux",
+    "emailAccountUser": "pmyest",
+    "emailAccountName": "pm [yest]",
+    "emailAccountDsc": "מייל אישי",
+    "jobs": [
+      {
+        "description": "שרת קבלה-מייל אישי",
+        "context": "ifs-pm-receiver-integration.xml",
+        "rate": "online",
+        "input": "mailbox=Personal Mailbox YEST(pmyest)"
+      }
+    ],
+    "operations": [
+      {
+        "link": "Pmr/resetAlreadyParsedEmails",
+        "name": "Reset Duplicates",
+        "description": "reset duplicates before moving error mails to inbox"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "pmr-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "pm-cataloger [yest]",
+    "deployName": "pm-cataloger",
+    "port": 8780,
+    "debug": 8187,
+    "jmx": 23007,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "שרת העברה לקטלוג",
+        "context": "ifs-personal-mail-cataloger.xml",
+        "rate": "SUN-THU every 5 min from 6:00AM to 11:00PM",
+        "input": "table=M_PERSONAL_MAIL_FILES_PAGES",
+        "id": "personalMailAdaCataloger"
+      },
+      {
+        "description": "שרת העברה לקטלוג - נכשלים",
+        "context": "ifs-personal-mail-cataloger.xml",
+        "rate": "at 12:00AM, SUN,TUE",
+        "input": "table=M_PERSONAL_MAIL_FILES_PAGES",
+        "id": "personalMailFailedAdaCataloger"
+      }
+    ],
+    "link": "/webservices/IfsJobServer/",
+    "source": "pm-cataloger-yest",
+    "sourcetype": "ifs-dev"
+  },
+  {
+    "host": "ifsyest01",
+    "name": "wizsupport [yest]",
+    "deployName": "wizsupport",
+    "port": 8980,
+    "debug": 8189,
+    "jmx": 23009,
+    "os": "linux",
+    "jobs": [
+      {
+        "description": "תביעה מקוונת - קטלוג קבצי לקוח",
+        "context": "ifs-wizsupport-integration.xml",
+        "rate": "every 100 seconds"
+      }
+    ],
+    "link": "/webservices/IfsServer/",
+    "source": "wizsupport-yest",
+    "sourcetype": "ifs-dev"
+  }
+]

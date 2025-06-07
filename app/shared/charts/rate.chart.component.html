@@ -1,0 +1,20 @@
+<ad-widget>
+	<ad-widget-header icon="fa fa-{{$ctrl.icon}}" title="{{$ctrl.series}}">
+		<i class="bi bi-zoom-{{$ctrl.zoomIcon}}" ng-click="$ctrl.zoomChart()"></i>
+	</ad-widget-header>
+	<ad-widget-body classes="medium-chart">
+		<canvas id="basketsRateQueueChart" class="chart chart-base" height="180"
+		        chart-type="$ctrl.chartType"
+		        chart-colors="$ctrl.colors"
+		        chart-data="$ctrl.chartData"
+		        chart-labels="$ctrl.chartLabels"
+		        chart-series="$ctrl.chartSeries"
+		        chart-options="$ctrl.options"
+		        chart-click="$ctrl.onClick">
+		</canvas>
+	</ad-widget-body>
+<!--	<ad-widget-footer>-->
+<!--	</ad-widget-footer>-->
+</ad-widget>
+
+

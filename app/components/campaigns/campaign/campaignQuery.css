@@ -1,0 +1,14 @@
+.editableHeader {
+	background-color: #9acfea;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.hideArrows::-webkit-outer-spin-button,
+.hideArrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.hideArrows[type=number] {
+  -moz-appearance: textfield;
+}

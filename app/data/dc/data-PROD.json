@@ -1,0 +1,74 @@
+[
+  {
+    "host": "neviaconverter1",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter2",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter3",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter4",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter5",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter6",
+    "name": "doc-converter-pm",
+    "source": "document-converter-pm",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter7",
+    "name": "doc-converter",
+    "source": "document-converter",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  },
+  {
+    "host": "neviaconverter8",
+    "name": "doc-converter",
+    "source": "document-converter",
+    "sourcetype": "neviaconverter",
+    "executable": false,
+    "port": 8282,
+    "link": ""
+  }
+]

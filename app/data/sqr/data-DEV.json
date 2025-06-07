@@ -1,0 +1,56 @@
+[
+  {
+    "host": "pbbatch",
+    "port": 8080,
+    "name": "sqr-executor [ut]",
+    "source": "usertest",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cpbbatch%26output=test",
+    "executable": false
+  },
+  {
+    "host": "distributest",
+    "port": 9090,
+    "name": "sqr-executor [ut]",
+    "source": "usertest",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cdistributest%26output=test",
+    "executable": false
+  },
+  {
+    "host": "distributest",
+    "port": 18080,
+    "name": "sqr-executor [test]",
+    "source": "test",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cdistributest%26output=test",
+    "executable": false
+  },
+  {
+    "host": "distribuyest",
+    "port": 9090,
+    "name": "sqr-executor [yest]",
+    "source": "yest",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cdistribuyest%26output=test",
+    "executable": false
+  },
+  {
+    "host": "distribuqa",
+    "port": 8080,
+    "name": "sqr-executor [train]",
+    "source": "training",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cdistributrain%26output=test",
+    "executable": false
+  },
+  {
+    "host": "pdfconvertdev",
+    "port": 9090,
+    "name": "compulsory-sqr-executor [dev]",
+    "source": "dev",
+    "sourcetype": "compulsory-sqr-executor",
+    "link": "/sqrExecutor/PclToPdf/convert/?lisFilePath=f%3A%5CUsers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cpdfconvertdev%5Ctest.LIS",
+    "executable": false
+  }
+]

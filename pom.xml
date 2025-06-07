@@ -1,0 +1,326 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.5</version>
+	</parent>
+
+	<groupId>com.idi.applications</groupId>
+	<artifactId>astromonitor</artifactId>
+	<version>1.0</version>
+	<name>Astro Dashboard</name>
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<wro4j.version>1.8.0</wro4j.version>
+		<angularjs.version>1.5.3</angularjs.version>
+		<chartjs.version>2.7.3</chartjs.version>
+		<angularuigrid.version>4.8.3</angularuigrid.version>
+		<bootstrap.version>4.3.1</bootstrap.version>
+		<jquery.version>2.2.4</jquery.version>
+		<jasmine.version>2.0.0</jasmine.version>
+		<sockjsclient.version>1.5.1</sockjsclient.version>
+		<stompwebsocket.version>2.3.4</stompwebsocket.version>
+	</properties>
+
+	<dependencies>
+		<!-- JsonReader is used by splunk sdk-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+			        <exclusion>
+			            <groupId>org.springframework.boot</groupId>
+			            <artifactId>spring-boot-starter-logging</artifactId>
+			        </exclusion>
+			    </exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-integration</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+
+		<!--<dependency>-->
+			<!--<groupId>io.projectreactor</groupId>-->
+			<!--<artifactId>reactor-net</artifactId>-->
+			<!--<version>2.0.8.RELEASE</version>-->
+		<!--</dependency>-->
+		<dependency>
+		    <groupId>io.projectreactor.netty</groupId>
+		    <artifactId>reactor-netty</artifactId>
+		    <version>1.0.12</version>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>io.projectreactor</groupId>-->
+			<!--<artifactId>reactor-core</artifactId>-->
+			<!--<version>3.4.11</version>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.69.Final</version>
+		</dependency>
+
+
+		<!--<dependency>-->
+					<!--<groupId>org.springframework.boot</groupId>-->
+					<!--<artifactId>spring-boot-starter-reactor-netty</artifactId>-->
+					<!--<version>2.3.3.RELEASE</version>-->
+				<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-amqp</artifactId>-->
+		<!--</dependency>-->
+
+		<dependency>
+	        <groupId>org.springframework.ldap</groupId>
+	        <artifactId>spring-ldap-core</artifactId>
+	    </dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jcifs</groupId>
+			<artifactId>jcifs</artifactId>
+			<version>1.3.17</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>angularjs</artifactId>
+			<version>${angularjs.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jasmine</artifactId>
+			<version>${jasmine.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>21.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.9.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.splunk</groupId>
+		    <artifactId>splunk</artifactId>
+		    <version>1.5.0.0</version>
+		  </dependency>
+
+		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>1.0.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<finalName>dashboard</finalName>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>${project.build.directory}/generated-resources</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<!-- Serves *only* to filter the wro.xml so it can get an absolute path for the project -->
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/wro</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/wro</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>ro.isdc.wro4j</groupId>
+				<artifactId>wro4j-maven-plugin</artifactId>
+				<version>${wro4j.version}</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+					<cssDestinationFolder>${project.build.directory}/generated-resources/static/css</cssDestinationFolder>
+					<jsDestinationFolder>${project.build.directory}/generated-resources/static/js</jsDestinationFolder>
+					<wroFile>${project.build.directory}/wro/wro.xml</wroFile>
+					<extraConfigFile>${project.build.directory}/wro/wro.properties</extraConfigFile>
+					<contextFolder>${project.build.directory}/wro</contextFolder>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>angularjs</artifactId>
+						<version>${angularjs.version}</version>
+					</dependency>
+					<!--<dependency>-->
+						<!--<groupId>org.webjars</groupId>-->
+						<!--<artifactId>angular-ui-bootstrap</artifactId>-->
+						<!--<version>3.0.6</version>-->
+					<!--</dependency>-->
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>angular-ui-router</artifactId>
+						<version>0.2.18</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>bootstrap</artifactId>
+						<version>${bootstrap.version}</version>
+					</dependency>
+					<dependency>
+					    <groupId>org.webjars</groupId>
+					    <artifactId>chartjs</artifactId>
+					    <version>${chartjs.version}</version>
+					</dependency>
+					<dependency>
+					    <groupId>org.webjars.bower</groupId>
+					    <artifactId>angular-ui-grid</artifactId>
+					    <version>${angularuigrid.version}</version>
+					</dependency>
+					<dependency>
+					    <groupId>org.webjars</groupId>
+					    <artifactId>font-awesome</artifactId>
+					    <version>6.3.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.webjars.npm</groupId>
+						<artifactId>bootstrap-icons</artifactId>
+						<version>1.10.2</version>
+					</dependency>
+
+					<!--<dependency>-->
+						<!--<groupId>org.webjars</groupId>-->
+						<!--<artifactId>webjars-locator-core</artifactId>-->
+					<!--</dependency>-->
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>sockjs-client</artifactId>
+						<version>${sockjsclient.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.webjars</groupId>
+						<artifactId>stomp-websocket</artifactId>
+						<version>${stompwebsocket.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,80 @@
+<ad-widget>
+	<ad-widget-header icon="bi bi-bar-chart" title="Stats for today ASTRO"></ad-widget-header>
+	<ad-widget-body classes="stats">
+		<table class="table table-borderless table-sm" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<i class="bi bi-basket" uib-tooltip="[astro] Completed baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.completedBasketsQuery }}">
+						{{ $ctrl.completedBaskets }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-basket red" uib-tooltip="[astro] Fsiled baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedBasketsQuery }}">
+						{{ $ctrl.failedBaskets }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="bi bi-envelope" uib-tooltip="[astro] Outgoing Email"></i>
+					<a target="_blank" ng-href="{{ $ctrl.outgoingEmailsQuery }}">
+						{{ $ctrl.outgoingEmails }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-envelope red" uib-tooltip="[astro] Failed Email Baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedEmailBasketsQuery }}">
+						{{ $ctrl.failedEmailBaskets }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="fas fa-sms" uib-tooltip="[astro] Outgoing Sms"></i>
+					<a target="_blank" ng-href="{{ $ctrl.outgoingSmsMessagesQuery }}">
+						{{ $ctrl.outgoingSmsMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="fas fa-sms red" uib-tooltip="[astro] Failed Sms Baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedSmsBasketsQuery }}">
+						{{ $ctrl.failedSmsBaskets }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="fa fa-fax"  uib-tooltip="[astro] Outgoing Fax"></i>
+					<a target="_blank" ng-href="{{ $ctrl.outgoingFaxesQuery }}">
+						{{ $ctrl.outgoingFaxes }}
+					</a>
+				</td>
+				<td>
+					<i class="fas fa-fax red" uib-tooltip="[astro] Failed Fax Baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedFaxBasketsQuery }}">
+						{{ $ctrl.failedFaxBaskets }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="bi bi-whatsapp" uib-tooltip="[astro] Outgoing WhatsApp"></i>
+					<a target="_blank" ng-href="{{ $ctrl.outgoingWhatsAppMessagesQuery }}">
+						{{ $ctrl.outgoingWhatsAppMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-whatsapp red" uib-tooltip="[astro] Failed WhatsApp Baskets"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedWaBasketsQuery }}">
+						{{ $ctrl.failedWaBaskets }}
+					</a>
+				</td>
+			</tr>
+		</table>
+	</ad-widget-body>
+	<ad-widget-footer>
+		<i class="bi bi-clock"></i> {{ $ctrl.lastCheckDate | date:'HH:mm:ss' }}
+	</ad-widget-footer>
+</ad-widget>

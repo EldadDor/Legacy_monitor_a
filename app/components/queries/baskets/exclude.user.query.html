@@ -1,0 +1,54 @@
+<form name="queryForm" role="search" ng-submit="$ctrl.excludeCellNr(queryForm)">
+
+	<div class="form-group">
+		<div class="form-row align-items-center">
+			<div ng-repeat="searchType in $ctrl.searchParams" class="ml-1 mr-3">
+				<label>
+					<input type="radio" name="searchType" ng-model="$parent.$ctrl.queryCode"
+					       value="{{searchType.id}}"/>
+					{{searchType.name}}
+				</label>
+			</div>
+
+			<div class="col-auto">
+				<button type="submit" ng-if="$ctrl.isQueryRunning == false"
+				        class="btn btn-primary btn-sm">
+					Submit
+				</button>
+				<ad-loading ng-show="$ctrl.isQueryRunning == true"></ad-loading>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-group">
+		<input id="cellNr" class="form-control mb-2" name="cellNr"
+		       ng-model="$ctrl.cellNr"
+		       maxlength="10"
+		       placeholder="cell_nr"/>
+
+		<input id="userId" class="form-control mb-2" name="userId"
+		       ng-model="$ctrl.userId"
+		       ng-show="$ctrl.queryCode ==1"
+		       maxlength="6"
+		       placeholder="user_id"/>
+
+		<input id="updateUser" class="form-control mb-2" name="updateUser"
+		       ng-model="$ctrl.updateUser"
+		       ng-show="$ctrl.queryCode ==1"
+		       maxlength="6"
+		       placeholder="update_user"/>
+
+		<input id="userName" class="form-control" name="userName"
+		       ng-model="$ctrl.userName"
+		       ng-show="$ctrl.queryCode ==1"
+		       maxlength="60"
+		       placeholder="user_name"/>
+	</div>
+
+
+</form>
+
+<div class="alert alert-danger" role="alert" ng-show="$ctrl.queryErrorFeedback">{{ $ctrl.queryErrorFeedback }}
+</div>
+<div class="alert alert-info" role="alert" ng-show="$ctrl.queryInfoFeedback">{{ $ctrl.queryInfoFeedback }}</div>

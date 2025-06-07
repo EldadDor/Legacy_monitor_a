@@ -1,0 +1,83 @@
+<form name="queryForm" role="search" ng-submit="$ctrl.searchCampaign(queryForm)">
+	<div class="form-group">
+		<div class="form-row align-items-center">
+			<div class="col-auto">
+				<input type="number" id="listTypeSearchKey" name="listTypeSearchKey" class="hideArrows form-control"
+				       ng-model="$ctrl.listTypeSearchKey"
+				       ng-focus="$ctrl.sendNrSearchKey=null"
+				       placeholder="list_type" autofocus/>
+			</div>
+			<div class="col-auto">
+				<input type="number" id="sendNrSearchKey" name="sendNrSearchKey" class="hideArrows form-control"
+				       ng-model="$ctrl.sendNrSearchKey"
+				       ng-focus="$ctrl.listTypeSearchKey=null"
+				       placeholder="send_nr"/>
+			</div>
+			<div class="col-auto">
+				<input type="number" id="rowsLimit" name="rowsLimit" class="form-control"
+								       ng-model="$ctrl.rowsLimit"
+								       placeholder="rows_limit"/>
+			</div>
+
+			<div class="col-auto">
+				<button type="submit" ng-if="$ctrl.isQueryRunning == false"
+				        class="btn btn-primary btn-sm">
+					Search Campaign
+				</button>
+				<button ng-if="$ctrl.isQueryRunning == false && $ctrl.selectedRows" ng-click="$ctrl.showDistribution()"
+				        class="btn btn-primary btn-sm">
+					Show Distribution
+				</button>
+				<button type="button"
+				        ng-show="$ctrl.isQueryRunning == false && $ctrl.gridOptions.data.length>0"
+				        ng-click="$ctrl.distribCampaign()"
+				        class="btn btn-primary btn-sm">
+					Distribute Campaign
+				</button>
+
+				<ad-loading ng-show="$ctrl.isQueryRunning == true"></ad-loading>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<span ng-repeat="searchType in $ctrl.searchParams">
+			<label>
+				<input type="radio" name="searchType" ng-model="$parent.$ctrl.queryCode"
+				       ng-change="$ctrl.onSearchTypeChange()"
+				       value="{{searchType.id}}"/>
+				{{searchType.name}}
+			</label>
+			&nbsp;
+		</span>
+	</div>
+
+	Hour <select ng-model="$ctrl.distribHour" ng-options="n for n in [] | range:9:20"> </select>
+	<div class="alert alert-danger" role="alert" ng-show="$ctrl.queryCode!=1 && $ctrl.isDistribHourRestricted()">
+		ניתן להפיץ קמפיין בשעות 09:00-19:00 בלבד, יש לבחור שעת שליחה
+	</div>
+
+</form>
+<div ng-if="$ctrl.gridOptions.data.length>0">
+	תא אחרון שעודכן: {{$ctrl.msg.lastCellEdited}} <br/>
+	SendNr: {{ $ctrl.sendNr }} ListType: <span>{{ $ctrl.listType }} {{ $ctrl.cmpgnDsc }} </span>
+	<span ng-if="$ctrl.gridOptions.data.length < $ctrl.campaignSize">{{ $ctrl.gridOptions.data.length }} row(s) loaded, campaign size is {{ $ctrl.campaignSize }} </span>
+	<div class="mt-3 mb-3">
+		<button type="button" class="btn btn-success" ng-click="$ctrl.selectAll()">Select All</button>
+		<button type="button" class="btn btn-success" ng-click="$ctrl.clearAll()">Clear All</button>
+	</div>
+</div>
+
+
+
+<div id="grid" ng-if="!$ctrl.hideGrid" ui-grid="$ctrl.gridOptions" class="grid mt-3 mb-3" dir="rtl"
+     ui-grid-auto-resize
+     ui-grid-resize-columns
+     ui-grid-pinning
+     ui-grid-selection
+     ui-grid-edit
+     ui-grid-validate>
+</div>
+
+<div class="alert alert-danger" role="alert" ng-show="$ctrl.queryErrorFeedback">{{ $ctrl.queryErrorFeedback }}</div>
+<div class="alert alert-info" role="alert" ng-show="$ctrl.queryInfoFeedback">{{ $ctrl.queryInfoFeedback }}</div>
+

@@ -1,0 +1,37 @@
+<!--{{ $ctrl.data }}-->
+<!--{{ $ctrl.labels }}-->
+<!--{{ $ctrl.series }}-->
+
+<!--	<div class="{{$ctrl.chartSize}}">-->
+		<ad-widget>
+			<ad-widget-header  icon="fa fa-{{$ctrl.icon}}" title="{{$ctrl.series}}">
+				<i class="bi bi-zoom-{{$ctrl.zoomIcon}}" ng-click="$ctrl.zoomChart()"></i>
+				<!--<span uib-dropdown>-->
+				<!--<a href id="simple-dropdown" uib-dropdown-toggle>-->
+				<!--{{ $ctrl.chartPeriod }}-->
+				<!--</a>-->
+				<!--<ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">-->
+				<!--<li ng-repeat="choice in $ctrl.items">-->
+				<!--<a ng-model="$ctrl.chartPeriod" href>{{choice}}</a>-->
+				<!--</li>-->
+				<!--</ul>-->
+				<!--</span>-->
+			</ad-widget-header>
+			<ad-widget-body>
+<!--				<div id="chart-wrapper">-->
+				<canvas id="basketsInQueueBarChart" class="chart chart-bar"
+				        chart-colors="$ctrl.colors"
+				        chart-data="$ctrl.chartData"
+				        chart-labels="$ctrl.chartLabels"
+				        chart-series="$ctrl.chartSeries"
+				        chart-options="$ctrl.options"
+				        chart-click="$ctrl.onClick">
+				</canvas>
+<!--				</div>-->
+			</ad-widget-body>
+			<ad-widget-footer>
+				Last check: {{ $ctrl.lastCheckTime | date:'HH:mm:ss' }}
+			</ad-widget-footer>
+		</ad-widget>
+<!--	</div>-->
+

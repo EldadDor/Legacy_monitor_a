@@ -1,0 +1,112 @@
+
+.grid {
+  /* width: 500px;*/
+  height: 450px;
+  width: 100%;
+}
+
+.full button span {
+  background-color: limegreen;
+  border-radius: 32px;
+  color: black;
+}
+.partially button span {
+  background-color: orange;
+  border-radius: 32px;
+  color: black;
+}
+
+.datepopup.ng-invalid {
+  border: 1px solid red;
+}
+
+
+
+.results tr[visible='false'],
+.no-result {
+	display: none;
+}
+
+.results tr[visible='true'] {
+	display: table-row;
+}
+
+.list-group-item {
+	padding: 0;
+}
+
+.control-panel button {
+	width: 114px;
+}
+
+
+.control-panel {
+	margin-bottom: 0;
+}
+
+.status {
+	width: 75px;
+	/*margin-right: 5px;*/
+	display: inline-block;
+}
+
+
+/*.widget .widget-body table tbody .badge, .widget .widget-body table tbody .badge span {*/
+	/*font-size: 12px;*/
+/*}*/
+
+/*.panel-default > .panel-heading .widget-header .badge*/
+.widget .widget-body table tbody .badge  {
+    /*color: #f00;*/
+    /*-webkit-filter: invert(100%);*/
+    /*filter: invert(100%);*/
+	font-weight: normal;
+	background-color: #ffffff;
+	color:#333333;
+	border: 1px #333333 groove;
+}
+
+.loading {
+	width: 20px;
+	height: 20px;
+	position: relative;
+}
+
+.double-bounce1, .double-bounce2 {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background-color: #f0ad4e;
+	opacity: .6;
+	position: absolute;
+	top: 0;
+	left: 0;
+	-webkit-animation: bounce 2s infinite ease-in-out;
+	animation: bounce 2s infinite ease-in-out
+}
+
+.double-bounce2 {
+	-webkit-animation-delay: -1s;
+	animation-delay: -1s
+}
+
+@-webkit-keyframes bounce {
+	0%, 100% {
+		-webkit-transform: scale(0)
+	}
+	50% {
+		-webkit-transform: scale(1)
+	}
+}
+
+@keyframes bounce {
+	0%, 100% {
+		transform: scale(0);
+		-webkit-transform: scale(0)
+	}
+	50% {
+		transform: scale(1);
+		-webkit-transform: scale(1)
+	}
+}
+

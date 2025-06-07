@@ -1,0 +1,29 @@
+[
+  {
+    "host": "sqrprod1",
+    "port": 9090,
+    "name": "sqr-executor",
+    "source": "executor-error",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Csqrprod1%26output=test",
+    "executable": false
+  },
+  {
+    "host": "sqrprod2",
+    "port": 9090,
+    "name": "sqr-executor",
+    "source": "executor-error",
+    "sourcetype": "sqr-executor",
+    "link": "/sqrExecutor/ReportSqr/HF500040/?sqrParams=1439176700%200%200%200%20%204740%200%26filePath=f%3A%5Cusers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Csqrprod2%26output=test",
+    "executable": false
+  },
+  {
+    "host": "pdfconvertprod",
+    "port": 9090,
+    "name": "compulsory-executor-error",
+    "source": "Prod",
+    "sourcetype": "compulsory-sqr-executor",
+    "link": "/sqrExecutor/PclToPdf/convert/?lisFilePath=f%3A%5CUsers%5Cdistribu%5CTEST%5Csqr-executor%5Cmonitor%5Cpdfconvertprod%5Ctest.LIS",
+    "executable": false
+  }
+]

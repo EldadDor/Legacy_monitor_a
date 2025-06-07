@@ -1,0 +1,50 @@
+[
+  {
+    "host": "pbbatch",
+    "port": 8580,
+    "name": "astro [ut]",
+    "source": "usertest",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "pbbatch2",
+    "port": 8580,
+    "name": "astro [ut]",
+    "source": "usertest",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "pbbatch3",
+    "port": 8580,
+    "name": "astro [ut]",
+    "source": "usertest",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distributest",
+    "port": 8580,
+    "name": "astro [test]",
+    "source": "test",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribuyest",
+    "name": "astro [yest]",
+    "port": 8580,
+    "source": "yest",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribuqa",
+    "name": "astro [train]",
+    "port": 8580,
+    "source": "training",
+    "sourcetype": "astro-dev",
+    "link": "/webservices/AstroServer/"
+  }
+]

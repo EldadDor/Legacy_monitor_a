@@ -1,0 +1,111 @@
+<!--<nav class="navbar navbar-default toolbar" role="navigation">-->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light toolbar" role="navigation">
+
+	<!--<a class="navbar-brand" href="#"><img src="../../images/idi-brand.png"></a>-->
+	<button class="navbar-toggler" type="button" aria-label="Toggle navigation" ng-click="$ctrl.isNavCollapsed = !$ctrl.isNavCollapsed">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" uib-collapse="$ctrl.isNavCollapsed">
+		<ul class="navbar-nav mr-auto" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<li class="nav-item">
+				<a class="nav-link" href="http://centerity" target="_blank" tooltip-placement="bottom" uib-tooltip="Centerity">
+					<img src="../images/centerity.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://jira:8080" target="_blank" tooltip-placement="bottom" uib-tooltip="Jira">
+					 <img src="../images/jira.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://jbuild:8080" target="_blank" tooltip-placement="bottom" uib-tooltip="Jenkins">
+					 <img src="../images/jenkins.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://searcher:8000/en-US/app/idi/search" target="_blank" tooltip-placement="bottom" uib-tooltip="Splunk">
+					<img src="../images/splunk.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://cloud.inforu.co.il/sms/?page=messages&type=admin&SystemName=InfoAdmin&MenuName=MainMenu" target="_blank"
+				   tooltip-placement="bottom" uib-tooltip="inforu - SMS provider dashboard">
+					<img src="../images/inforu.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://secure.interfax.net" target="_blank"
+				   tooltip-placement="bottom" uib-tooltip="Interfax - Fax provider dashboard">
+					<img src="../images/interfax.png">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://console.twilio.com/" target="_blank"
+				   tooltip-placement="bottom" uib-tooltip="Twilio Console">
+					<img src="../images/twilio-logo.png">
+				</a>
+			</li>
+
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+				<a href="" ng-click="$ctrl.showControlOperationsLog()" target="_blank" uib-tooltip="AstroMonitor Log" tooltip-placement="bottom">
+					<i class="nav-link text-info fa fa-history" ng-show="$ctrl.isSearchQueryRunning != true" ></i>
+					<ad-loading ng-show="$ctrl.isSearchQueryRunning == true"></ad-loading>
+				</a>
+			</li>
+			<li class="nav-item dropdown user" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+				<div uib-dropdown>
+					<a href class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" uib-dropdown-toggle>
+						<span class="badge badge-pill red-bg badge-bell" ng-show="$ctrl.alerts.length > 0"> {{$ctrl.alerts.length }} </span>
+						<i class="far fa-bell" ng-class="{ 'red' : $ctrl.alerts.length > 0}"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" uib-dropdown-menu>
+						<a class="dropdown-item dropdown-header " href="#">Notifications</a>
+						<div class="dropdown-divider"></div>
+						<span ng-repeat="notification in $ctrl.alerts">
+							<a class="dropdown-item" target="_blank" href="{{ notification.link}}">{{ notification.message }}</a>
+						</span>
+					</div>
+				</div>
+			</li>
+			<li class="nav-item navbar-text">
+				<select ng-model="$ctrl.state.currentEnv"
+				        ng-show="$ctrl.state.isProdRoleUser()"
+				        ng-options="env for env in $ctrl.environments"
+				        ng-change="$ctrl.selectEnv()">
+				</select>
+				<select ng-model="$ctrl.state.currentDataSource"
+				        ng-show="$ctrl.state.currentEnv === 'DEV'"
+				        ng-options="dataSource for dataSource in $ctrl.dataSources"
+				        ng-change="$ctrl.selectDataSource()">
+				</select>
+			</li>
+			<li class="nav-item">
+				<span class="navbar-text">{{$ctrl.tickingClock | date:'dd/MM/yyyy HH:mm:ss'}}</span>
+			</li>
+
+			<li class="nav-item">
+				<span class="navbar-text">Signed in as {{ $ctrl.state.currentUser }}</span>
+			</li>
+			<li class="nav-item navbar-text" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+				<ad-inbox></ad-inbox>
+			</li>
+		</ul>
+		<!--<div class="nav-item dropdown user" uib-dropdown>-->
+			<!--<a href class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"-->
+			   <!--uib-dropdown-toggle>-->
+				<!--<img src="../images/avatar.jpg">-->
+				<!--<img src="http://phonebook:1440/employees/photo?user={{ $ctrl.state.username }}">-->
+			<!--</a>-->
+			<!--<div class="dropdown-menu dropdown-menu-left" uib-dropdown-menu>-->
+				<!--<a class="dropdown-item dropdown-header" href="#">{{ $ctrl.state.currentUser }}</a>-->
+				<!--<div class="dropdown-divider"></div>-->
+				<!--&lt;!&ndash;<a class="dropdown-item link" ng-click="$ctrl.logout()" href="#"><span class="glyphicon glyphicon-user"></span>Logout</a>&ndash;&gt;-->
+			<!--</div>-->
+		<!--</div>-->
+	</div>
+</nav>
+

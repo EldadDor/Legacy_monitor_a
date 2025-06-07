@@ -1,0 +1,96 @@
+<ad-widget>
+	<ad-widget-header icon="bi bi-bar-chart" title="Stats for today IFS"></ad-widget-header>
+	<ad-widget-body classes="stats">
+		<table class="table table-borderless table-sm" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<i class="bi bi-envelope" uib-tooltip="[pmr] incoming email"></i>
+					<a target="_blank" ng-href="{{ $ctrl.incomingEmailsQuery }}">
+						{{ $ctrl.incomingEmails }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-envelope red" uib-tooltip="[pmr] failed messages"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedPmrMessagesQuery }}">
+						{{ $ctrl.failedPmrMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-envelope red" uib-tooltip="[returned] returned email"></i>
+					<a target="_blank" ng-href="{{ $ctrl.returnedEmailsQuery }}">
+						{{ $ctrl.returnedEmails }}
+					</a>
+				</td>
+
+			</tr>
+			<tr>
+				<td>
+					<i class="fas fa-sms" uib-tooltip="[pmr] incoming sms"></i>
+					<a target="_blank" ng-href="{{ $ctrl.incomingSmsMessagesQuery }}">
+						{{ $ctrl.incomingSmsMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-envelope red" uib-tooltip="[pmr] incoming email - failed conversion"></i>
+					<a target="_blank" ng-href="{{ $ctrl.conversionFailedEmailsQuery }}">
+						{{ $ctrl.conversionFailedEmails }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-file-earmark red" uib-tooltip="[doc-converter] doc conversion failed"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedConversionsQuery }}">
+						{{ $ctrl.failedConversions }}
+					</a>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<i class="fa fa-fax" uib-tooltip="[pfr] incoming fax"></i>
+					<a target="_blank" ng-href="{{ $ctrl.incomingFaxesQuery }}">
+						{{ $ctrl.incomingFaxes }}
+					</a>
+				</td>
+				<td>
+					<i class="fa fa-fax red" uib-tooltip="[pfr] failed incoming fax"></i>
+					<a target="_blank" ng-href="{{ $ctrl.failedPfrMessagesQuery }}">
+						{{ $ctrl.failedPfrMessages }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="bi bi-whatsapp" uib-tooltip="[twilio-receiver] incoming WhatsApp files"></i>
+					<a target="_blank" ng-href="{{ $ctrl.incomingWhatsAppMessagesQuery }}">
+						{{ $ctrl.incomingWhatsAppMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-whatsapp red" uib-tooltip="[twilio-receiver] failed incoming WhatsApp files"></i>
+					<a target="_blank" ng-href="{{ $ctrl.whatsAppFailedMessagesQuery }}">
+						{{ $ctrl.whatsAppFailedMessages }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<i class="bi bi-safe2" uib-tooltip="[casefet] processed casefet files"></i>
+					<a target="_blank" ng-href="{{ $ctrl.casefetMessagesQuery }}">
+						{{ $ctrl.casefetMessages }}
+					</a>
+				</td>
+				<td>
+					<i class="bi bi-safe2 red" uib-tooltip="[casefet] failed casefet files"></i>
+					<a target="_blank" ng-href="{{ $ctrl.casefetFailedMessagesQuery }}">
+						{{ $ctrl.casefetFailedMessages }}
+					</a>
+				</td>
+			</tr>
+
+
+		</table>
+	</ad-widget-body>
+	<ad-widget-footer>
+		<i class="bi bi-clock"></i> {{ $ctrl.lastCheckDate | date:'HH:mm:ss' }}
+	</ad-widget-footer>
+</ad-widget>

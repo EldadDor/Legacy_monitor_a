@@ -1,0 +1,94 @@
+<div class="jumbotron subhead">
+	<h2>Document Converter Monitor <img src="../images/neevia.png"/></h2>
+	<p class="lead">
+	<div class="card thumbnail">
+		<a href="../images/doc-converter-network.jpg" target="_blank" class="thumbnail">
+			<img src="../images/doc-converter-network.jpg" class="card-img-top" alt="...">
+		</a>
+	</div>
+	</p>
+</div>
+
+<div class="row">
+	<div class="col-lg-6">
+		<div class="alert alert-info" role="alert">
+			<ul>
+				<li>Search for conversion errors in
+					<a target="_blank"
+					   href="http://searcher:8000/en-US/app/idi/search?q=search%20DOC_NOT_CONVERTED%20sourcetype%3Dneviaconverter&display.page.search.mode=fast&dispatch.sample_ratio=1&earliest=%40d&latest=now&sid=1527419959.2659603_1244A636-9EC6-4DA2-AB18-8FA02B628140"
+					   class="alert-link">splunk</a>: DOC_NOT_CONVERTED sourcetype="neviaconverter"
+				</li>
+				<li>
+					Neevia DocConverter restart: Open Windows Service Manager (services.msc), right-click on DCStart
+					service
+				</li>
+				<li>
+					Tomcat server restart: Use "Start"/"Stop" buttons in Apache Management Tool, ensure that DCStart
+					service is running
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!--<div class="row">-->
+<!--<ad-servers-table data="$ctrl.dcData"></ad-servers-table>-->
+<!--</div>-->
+<div class="row">
+	<div class="col-lg-6">
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="Test Conversions"></ad-widget-header>
+			<ad-widget-body>
+				<table class="table table-hover results">
+					<tr ng-repeat="server in $ctrl.dcData">
+						<td> {{ server.host }}</td>
+						<td>
+							<a ng-href="http://searcher:8000/en-US/app/idi/search?q=search host={{server.host}} source={{server.source}} sourcetype={{server.sourcetype}}"
+							   target="_blank">
+								{{ server.name }}
+							</a>
+						</td>
+						<td>
+							<button class="btn btn-sm btn-{{ server.cssClass }} status"
+							        ng-if="server.conversionStatus != null">
+								{{ server.conversionStatus }}
+							</button>
+						</td>
+						<td>
+							<button class="btn btn-sm default status"
+							        ng-click="$ctrl.testDcConverter(server)"
+							        ng-if="$ctrl.isQueryRunning == false">
+								Test
+							</button>
+							<ad-loading ng-show="$ctrl.isQueryRunning == true"></ad-loading>
+						</td>
+						<!--<td> {{date | date:'yyyy-MM-dd HH:mm:ss'}}</td>-->
+						<td> {{ server.lastUpdatedDate | date:'HH:mm:ss' }}</td>
+					</tr>
+				</table>
+			</ad-widget-body>
+		</ad-widget>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-6">
+		<div class="alert alert-info" role="alert">
+			</i><a target="_blank" ng-href="{{ $ctrl.failedConversionsQuery }}">
+			<i class="bi bi-search"></i> Failed Conversions
+		</a>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="Failed Neevia Conversions"></ad-widget-header>
+			<ad-widget-body>
+				<div id="grid1" ui-grid="$ctrl.gridOptions" class="grid"
+				     ui-grid-auto-resize
+				     ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+	</div>
+</div>
+
+

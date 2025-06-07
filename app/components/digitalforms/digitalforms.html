@@ -1,0 +1,158 @@
+<div class="jumbotron subhead">
+	<h2>דשבורד טפסים דיגטליים</h2>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<form name="queryForm" role="search" ng-submit="$ctrl.search(queryForm)">
+			<div class="form-group">
+				<div class="form-row align-items-center">
+					<div class="col-auto">
+						<!--<md-input-container class="col-auto"-->
+						<!--style="width: 20em;">-->
+						<!--<input uib-tooltip="הזן טופס דיגיטלי" placeholder="הזן טופס דיגיטלי" autofocus-->
+						<!--ng-model="$ctrl.digitalFormId">-->
+						<!--</md-input-container>-->
+						<!--md-items="globalAuthListModel in globalAuthCtrl.queryGlobalAuthList('authName',globalAuthCtrl.authName)" -->
+						<input uib-tooltip="הזן טופס דיגיטלי" placeholder="הזן ט.דיגיטלי" autofocus
+						       class="form-control"
+						       type="text" name="digitalFormId" ng-model="digitalForm"
+						       typeahead-on-select="$ctrl.selectTypeAhead($item)"
+						       ng-change="$ctrl.onChangeDigitalForm(digitalForm)"
+						       uib-typeahead="digitalForm.id as digitalForm.label  for digitalForm in $ctrl.digitalforms2 | filter:$viewValue"
+						       typeahead-loading="loadingForms"
+						       typeahead-no-results="noResults"
+						       class="form-control input-sm"
+						       typeahead-input-formatter="$ctrl.formatDigitalFormLabel($model)">
+						<i ng-show="loadingForms" class="glyphicon glyphicon-refresh"></i>
+						<!--<p>&nbsp;</p>-->
+						<!--<br>-->
+						<!--<div>Client</div>-->
+						<!--<div>id: {{digitalForm.id}}</div>-->
+						<!--<div>firstName: {{client.firstName}}</div>-->
+					</div>
+					<div class="col-auto" ng-if="$ctrl.digitalForm.name">
+						<label uib-tooltip="שם טופס"> טופס : {{$ctrl.digitalForm.name }}</label>
+					</div>
+					<div class="col-auto">
+						<!-- <label>הזן מספר טופס דיגיטלי</label> -->
+						<input class="form-control" uib-tooltip="הזן לקוח" placeholder="הזן לקוח" autofocus
+						       ng-model="$ctrl.clientId">
+					</div>
+
+					<!--<div style="margin-left: 1em;" class="col-auto">-->
+					<!--<md-input-container class="col-auto"-->
+					<!--style="width: 20em;">-->
+					<!--&lt;!&ndash; <label>הזן מספר טופס דיגיטלי</label> &ndash;&gt;-->
+					<!--<input uib-tooltip="הזן סיומת לינק לצפיה בנתוני דפדפן" placeholder="הזן סיומת לינק" autofocus-->
+					<!--ng-model="$ctrl.digitalFormSuffix">-->
+					<!--</md-input-container>-->
+					<!--</div>-->
+
+					<div class="col-auto">
+						<ad-from-datepicker placeholder="הזן מתאריך" uib-tooltip="שדה מתאריך" id="fromDateFieldId"
+						                    date="$ctrl.fromDate">
+						</ad-from-datepicker>
+						<!-- <ad-datepicker ng-show="$ctrl.isQueryRunning == false" date="$ctrl.fromDate"></ad-datepicker>  -->
+
+						<!-- ng-click="$ctrl.showAlert()" -->
+					</div>
+
+					<!-- ng-click="$ctrl.updateIncreaseDate(queryForm);" -->
+					<div class="col-auto">
+						<!--<ad-datepicker placeholder="הזן עד תאריך" uib-tooltip="שדה עד תאריך"-->
+						<!--date="$ctrl.toDate"></ad-datepicker>-->
+						<ad-until-datepicker placeholder="הזן עד תאריך" uib-tooltip="שדה עד תאריך" id="untilDateFieldId"
+						                     date="$ctrl.toDate">
+						</ad-until-datepicker>
+					</div>
+					<div class="col-auto">
+						<button type="submit" ng-if="$ctrl.isQueryRunning == false"
+						        class="btn btn-primary btn-sm">
+							רענן נתוני שליחה וקבלה של טפסים
+						</button>
+						<ad-loading ng-show="$ctrl.isQueryRunning == true"></ad-loading>
+					</div>
+				</div>
+			</div>
+			<div ng-show="noResults">
+				<i class="glyphicon glyphicon-remove"></i> No Results Found
+			</div>
+			<div class="alert alert-danger" role="alert" ng-show="$ctrl.showDatesAlert">
+				"שדה "מתאריך" גדול משדה "עד תאריך
+			</div>
+			<div class="alert alert-danger" role="alert" ng-show="$ctrl.showDatesWideRangeAlert">
+				טווח התאריכים יכול להיות עד יומיים
+			</div>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="טפסים שנשלחו"></ad-widget-header>
+			<ad-widget-body>
+				<div ng-if="!$ctrl.hideGrid" id="grid1" ui-grid="$ctrl.gridOptions" class="grid"
+				     ui-grid-auto-resize
+				     ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="טפסים שהוגשו"></ad-widget-header>
+			<ad-widget-body>
+				<div ng-if="!$ctrl.hideGrid" id="grid2" ui-grid="$ctrl.gridOptions2" class="grid"
+				     ui-grid-auto-resize
+				     ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="אופן סיום הגשת טפסים"></ad-widget-header>
+			<ad-widget-body>
+				<div ng-if="!$ctrl.hideGrid" id="grid3" ui-grid="$ctrl.gridOptions3" class="grid"
+				     ui-grid-auto-resize
+				     ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+
+
+		<form name="queryForm2" role="search" ng-submit="$ctrl.search2(queryForm)">
+			<div class="form-group">
+				<div class="form-row align-items-center">
+					<div class="col-auto">
+							<!-- <label>הזן מספר טופס דיגיטלי</label> -->
+							<input uib-tooltip="הזן סיומת לינק לצפיה בנתוני דפדפן"
+							       placeholder="הזן סיומת לינק"
+							       class="form-control"
+							       ng-model="$ctrl.digitalFormSuffix">
+					</div>
+					<div class="col-auto">
+						<button type="submit" ng-if="$ctrl.isQueryRunning2 == false"
+						        class="btn btn-primary btn-sm">
+							הצג נתוני דפדפן עבור לינק
+						</button>
+						<ad-loading ng-show="$ctrl.isQueryRunning2 == true"></ad-loading>
+					</div>
+					‏
+				</div>
+			</div>
+		</form>
+
+
+		<ad-widget>
+			<ad-widget-header icon="bi bi-list-task" title="איתור נתוני דפדפן של טופס דיגיטלי"></ad-widget-header>
+			<ad-widget-body>
+				<div ng-if="!$ctrl.hideGrid2" id="grid4" ui-grid="$ctrl.gridOptions4" class="grid"
+				     ui-grid-auto-resize
+				     ui-grid-resize-columns></div>
+			</ad-widget-body>
+		</ad-widget>
+
+
+	</div>
+</div>
+
+
+
+
+

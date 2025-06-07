@@ -1,0 +1,24 @@
+.stats i {
+	margin-left: 12px;
+}
+
+
+.widget .widget-body.stats {
+	padding: 5px 20px 0 20px;
+
+}
+.empty-stats {
+	height:151px;
+}
+.widget .widget-body.stats table tbody * {
+	font-size: 0.9rem;
+}
+
+.widget .widget-body.stats .widget-content table tbody th {
+	font-size: 0.9rem;
+	color: #767676;
+	font-weight: 400;
+}
+
+
+

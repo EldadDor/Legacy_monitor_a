@@ -1,0 +1,18 @@
+.log {
+    padding-bottom:30px;
+}
+.log h2 {
+    background-color: #eeeeee;
+}
+
+.left-inline {
+    display: inline;
+    width:25%;
+}
+.jumbotron {
+    padding: 5px 15px;
+}
+
+.thumbnail {
+    width: 60px;
+}

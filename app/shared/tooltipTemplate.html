@@ -1,0 +1,35 @@
+<div class="server-config">
+	<div>
+		<h1> {{ server.description }} </h1>
+	</div>
+	<p>
+	<div>
+		port: {{ server.port }}
+	</div>
+	<div>
+		debug: {{ server.debug }}
+	</div>
+	<div>
+		jmx: {{ server.jmx }}
+	</div>
+	</p>
+
+	<div ng-repeat="job in server.jobs" class="server-info">
+		<div>
+			<span class="bilingual">{{ job["description"] }} </span>
+		</div>
+		<div>
+			rate: {{ job["rate"] }}
+		</div>
+		<div>
+			context: {{ job["context"] }}  id: {{ job["id"] }}
+		</div>
+		<div ng-show="job['input'] != null">
+			input: {{ job["input"] }}
+		</div>
+	</div>
+
+	<p>
+		{{ server.input }}
+	</p>
+</div>

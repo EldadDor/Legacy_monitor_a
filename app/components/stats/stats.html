@@ -1,0 +1,52 @@
+<ad-widget>
+	<ad-widget-header icon="bi bi-bar-chart" title="Stats for today"></ad-widget-header>
+	<ad-widget-body classes="stats">
+		<table class="table table-borderless table-sm" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					הפצות רגולטוריות
+				</td>
+				<td>
+					<a target="_blank" ng-href="{{ $ctrl.autoDistribQuery }}" uib-tooltip="ifs-auto-distrib">
+						{{ $ctrl.autoDistrib }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+		</table>
+	</ad-widget-body>
+	<ad-widget-footer>
+		<i class="bi bi-clock"></i> {{ $ctrl.lastCheckDate | date:'HH:mm:ss' }}
+	</ad-widget-footer>
+</ad-widget>

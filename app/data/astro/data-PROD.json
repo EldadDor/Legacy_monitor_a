@@ -1,0 +1,92 @@
+[
+  {
+    "host": "distribution2",
+    "name": "astro2",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+     "host": "distribution3",
+     "name": "astro3",
+     "port": 8580,
+     "debug": 8185,
+     "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+     "link": "/webservices/AstroServer/"
+   },
+  {
+    "host": "distribution4",
+    "name": "astro4",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution5",
+    "name": "astro5",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution6",
+    "name": "astro6",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution7",
+    "name": "astro7",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution8",
+    "name": "astro8",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution12",
+    "name": "astro12",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  },
+  {
+    "host": "distribution13",
+    "name": "astro13",
+    "port": 8580,
+    "debug": 8185,
+    "jmx": 23005,
+    "source": "prod",
+    "sourcetype": "astro",
+    "link": "/webservices/AstroServer/"
+  }
+]

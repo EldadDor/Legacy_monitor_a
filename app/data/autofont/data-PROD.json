@@ -1,0 +1,38 @@
+[
+  {
+    "host": "autofontrun1",
+    "name": "autofont-letters",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  },
+  {
+    "host": "autofontrun2",
+    "name": "autofont-letters",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  },
+  {
+    "host": "afonthtmlrun1",
+    "name": "autofont-html",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  },
+  {
+    "host": "afonthtmlrun2",
+    "name": "autofont-html",
+    "executable": false,
+    "sourcetype": "",
+    "source": "",
+    "port": 80,
+    "link": ""
+  }
+]

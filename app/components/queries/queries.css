@@ -1,0 +1,21 @@
+
+.grid {
+  /* width: 500px;*/
+  height: 450px;
+  width: 100%;
+}
+
+.full button span {
+  background-color: limegreen;
+  border-radius: 32px;
+  color: black;
+}
+.partially button span {
+  background-color: orange;
+  border-radius: 32px;
+  color: black;
+}
+
+.datepopup.ng-invalid {
+  border: 1px solid red;
+}

@@ -1,0 +1,376 @@
+<!--<div ng-show="!$ctrl.authState.authenticated">-->
+<!--<div class="row alerts-container">-->
+<!--<div class="col-xs-12">-->
+<!--<div class="alert alert-success login-message">-->
+<!--<strong>Hello dear!</strong> Please <a href="#/login" class="alert-link">login</a> to the most groovy dashboard on Earth-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<div ng-show="$ctrl.authState.authenticated">
+	<!--<form ng-submit="$ctrl.submitMessage()">-->
+	  <!--Enter text and hit enter:-->
+	  <!--<input type="text" ng-model="$ctrl.message" name="text" />-->
+	  <!--<input type="submit" id="submit" value="Submit" />-->
+	<!--</form>-->
+
+	<!--<div class="row">-->
+		<!--<div class="col-lg-12">-->
+			<!--<ad-inbox></ad-inbox>-->
+		<!--</div>-->
+	<!--</div>-->
+	<div class="row">
+		<div class="col-lg-3 col-md-6 col-xs-12 inner-col">
+			<ad-widget>
+				<ad-widget-header icon="fa fa-database" title="Baskets in DB queue">
+				</ad-widget-header>
+				<ad-widget-body classes="card-body medium">
+					<!--<div class="widget-icon blue-bg">-->
+					<!--<i class="fa fa-database"></i>-->
+					<!--</div>-->
+					<table class="table table-hover table-borderless" style="margin-top: 5px;">
+						<tr>
+							<th><span uib-tooltip="Queue type">Type</span></th>
+							<th><span uib-tooltip="[DB] Baskets queue">Queue</span></th>
+							<th><span uib-tooltip="Baskets handling rate per minute">Rate -1m</span></th>
+							<th><span uib-tooltip="Baskets queue Estimated Wait Time">EWT</span></th>
+							<th><span uib-tooltip="[DB] Baskets with future distrib date">Future</span></th>
+						</tr>
+						<tr ng-repeat="queue in $ctrl.basketsBeforeQueues track by $index" >
+							<td ng-show="$ctrl.basketsBeforeQueues[$index].size >= 0" class="table-cell queue-type-col">
+<!--								<i class="fa {{ queue.icon }}  {{ queue.color }}" aria-hidden="true" uib-tooltip="Baskets queue type - {{ queue.type }} priority"></i>-->
+<!--								<i class="bi bi-dot {{ queue.color }} fs-13"></i>-->
+								<div uib-tooltip="Baskets queue type - {{ queue.type }} priority">
+								<i class="fas fa-circle {{ queue.color }}"></i>
+								{{ queue.text }}
+								</div>
+							</td>
+							<td ng-show="$ctrl.basketsBeforeQueues[$index].size >= 0" ng-class="{ 'red' : $index==0 && $ctrl.basketsBeforeQueues[$index].size > 50}">
+								{{ queue.size }}
+							</td>
+							<td>
+								<span><b>{{$ctrl.completedBasketsRates[$index].size}}</b></span>
+							</td>
+							<td>
+								<b>{{ $ctrl.queuePriorities[$index].ewt }} </b>
+							</td>
+							<td ng-show="$ctrl.futureBasketsBeforeQueues[$index].size >= 0">
+								<!--								<i class="fa fa-history fa-flip-horizontal" uib-tooltip="Future baskets in DB queue - {{ queue.type }} priority"></i>-->
+								{{$ctrl.futureBasketsBeforeQueues[$index].size}}
+							</td>
+						</tr>
+					</table>
+				</ad-widget-body>
+				<ad-widget-footer>
+					<div>
+						<i class="bi bi-clock"></i>
+						{{ $ctrl.basketsBeforeQueueDate | date:'HH:mm:ss' }}
+					</div>
+				</ad-widget-footer>
+			</ad-widget>
+		</div>
+<!--		<div class="{{$ctrl.basketsInQueueChartSize}} inner-col" ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'">-->
+<!--			<ad-chart-bar chart-size="$ctrl.basketsInQueueChartSize"-->
+<!--			              service="'basketsInQueue'"-->
+<!--			              series="'Baskets in HZ queue'"-->
+<!--			              icon="'shopping-basket'">-->
+<!--			</ad-chart-bar>-->
+<!--		</div>-->
+		<div class="{{$ctrl.basketsHandlingRateChartSize}} inner-col">
+			<ad-rate-chart chart-size="$ctrl.basketsHandlingRateChartSize"
+			          chart-type="'LineWithLine'"
+			          service="'completedBaskets'"
+			          series="'Baskets Handling Rate'"
+			          icon="'shopping-basket'">
+			</ad-rate-chart>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12 inner-col">
+			<ad-widget>
+				<ad-widget-header icon="fa fa-shopping-basket" title="Distribution Stats">
+				</ad-widget-header>
+				<ad-widget-body classes="card-body medium">
+					<table class="table table-borderless table-hover" style="margin-top: 5px;">
+						<tr>
+							<th><span uib-tooltip="Queue type">Type</span></th>
+							<th><span uib-tooltip="[DB] Completed baskets today/last hour">Completed today /-1h</span></th>
+							<th><span uib-tooltip="[DB] Failed baskets today/last hour">Failed today /-1h</span></th>
+						</tr>
+						<tr ng-repeat="queue in $ctrl.queuePriorities track by $index">
+							<td class="table-cell queue-type-col">
+								<div uib-tooltip="Baskets queue type - {{ queue.name }} priority">
+									<i class="fas fa-circle {{ queue.color }}"></i>
+									{{ queue.name }}
+								</div>
+							</td>
+							<td>
+								<a target="_blank" ng-href="{{ queue.completedBasketsCountQuery }}"
+								   uib-tooltip="[astro] Completed Baskets today {{ queue.name }} priority [{{ queue.completedBasketsCountDate | date:'HH:mm:ss'}}]">
+									{{ queue.completedBasketsCount }}
+								</a>
+								<a target="_blank"  ng-href="{{ queue.completedBasketsLastHourCountQuery }}"
+								   uib-tooltip="[astro] Completed Baskets in last hour {{ queue.name }} priority [{{ queue.completedBasketsLastHourCountDate | date:'HH:mm:ss' }}]">
+									<small>/{{ queue.completedBasketsLastHourCount }}</small>
+								</a>
+							</td>
+							<td>
+								<a target="_blank" ng-show="queue.failedBasketsCount >= 0" ng-href="{{ queue.failedBasketsCountQuery }}" ng-class="{ 'red' : queue.failedBasketsCount > 0}"
+								   uib-tooltip="[astro] Failed Baskets today {{ queue.name }} priority [{{ queue.failedBasketsCountDate | date:'HH:mm:ss' }}]">
+									{{ queue.failedBasketsCount }}
+								</a>
+								<a target="_blank"  ng-class="{ 'red' : queue.failedBasketsLastHourCount}" ng-href="{{ queue.failedBasketsLastHourCountQuery }}"
+								   uib-tooltip="[astro] Failed Baskets in last hour {{ queue.name }} priority [{{ queue.failedBasketsLastHourCountDate | date:'HH:mm:ss' }}]">
+									<small>/{{queue.failedBasketsLastHourCount}}</small>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</ad-widget-body>
+				<ad-widget-footer>
+					<div>
+						<i class="bi bi-clock"></i>
+						{{ $ctrl.basketsBeforeQueueDate | date:'HH:mm:ss' }}
+					</div>
+				</ad-widget-footer>
+			</ad-widget>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12 inner-col">
+			<ad-widget>
+				<ad-widget-header icon="bi bi-bar-chart" title="Alerts">
+				</ad-widget-header>
+				<ad-widget-body classes="card-body medium">
+					<button type="button" class="btn" ng-class="$ctrl.alertState.getHostDownAlerts().length > 0 ? 'btn-danger' : 'btn-outline-secondary'">
+						down
+						<span class="badge badge-light">
+							{{ $ctrl.alertState.getHostDownAlerts().length }}
+						</span>
+					</button>
+					<button type="button" class="btn" ng-class="$ctrl.alertState.getHostIdleAlerts().length > 0 ? 'btn-warning' : 'btn-outline-secondary'">
+						idle
+						<span class="badge badge-light">
+							{{ $ctrl.alertState.getHostIdleAlerts().length }}
+						</span>
+					</button>
+					<button type="button" class="btn"
+					        uib-tooltip="Returned emails (-1h)"
+					        ng-class="$ctrl.returnedCount > 200 ? 'btn-danger' : 'btn-outline-secondary'">
+						returned
+						<span class="badge badge-light">
+							<a target="_blank" ng-href="{{ $ctrl.returnedCountQuery }}">
+								{{ $ctrl.returnedCount }}
+							</a>
+						</span>
+					</button>
+					<button type="button" class="btn"
+					        uib-tooltip="Failed doc conversions (-1h)"
+					        ng-class="$ctrl.failedConversionsCount > 15 ? 'btn-danger' : 'btn-outline-secondary'">
+						conversions
+						<span class="badge badge-light">
+							<a target="_blank" ng-href="{{ $ctrl.failedConversionsCountQuery }}">
+								{{ $ctrl.failedConversionsCount }}
+							</a>
+						</span>
+					</button>
+				</ad-widget-body>
+				<ad-widget-footer>
+					<div>
+					</div>
+				</ad-widget-footer>
+<!--			<ad-widget>-->
+<!--				<ad-widget-header classes="no-background" icon="fa fa-envelope" title="Mailboxes"></ad-widget-header>-->
+<!--				<ad-widget-body classes="card-body mailbox-counts">-->
+<!--					<ul class="list-group list-group-flush float-left mr-5" style="width:145px">-->
+<!--						<li class="list-group-item d-flex justify-content-between align-items-center"-->
+<!--						    ng-repeat="server in $ctrl.ifsData | filter: $ctrl.filterEmailAccounts"-->
+<!--						    ng-if="$index < 4"-->
+<!--						    uib-tooltip="[{{server.emailAccountUser}}] {{server.emailAccountDsc}}">-->
+<!--							{{server.emailAccountName}}-->
+<!--							<span class="badge badge-secondary badge-pill"-->
+<!--							      ng-class="{ 'badge-danger' : server.inboxMessageCount > 50}">{{server.inboxMessageCount}}</span>-->
+<!--						</li>-->
+<!--					</ul>-->
+<!--					<ul class="list-group list-group-flush float-left" style="width:145px">-->
+<!--						<li class="list-group-item d-flex justify-content-between align-items-center"-->
+<!--						    ng-repeat="server in $ctrl.ifsData | filter: $ctrl.filterEmailAccounts"-->
+<!--						    ng-if="$index >= 4"-->
+<!--						    uib-tooltip="[{{server.emailAccountUser}}] {{server.emailAccountDsc}}">-->
+<!--							{{server.emailAccountName}}-->
+<!--							<span class="badge badge-secondary badge-pill"-->
+<!--							      ng-class="{ 'badge-danger' : server.inboxMessageCount > 50}">{{server.inboxMessageCount}}</span>-->
+<!--						</li>-->
+<!--					</ul>-->
+<!--					<div class="clearfix"></div>-->
+<!--				</ad-widget-body>-->
+<!--				<ad-widget-footer>-->
+<!--					<div>-->
+<!--						<i class="bi bi-clock"></i>-->
+<!--						{{$ctrl.mailboxStatusLastUpdatedDate | date:'HH:mm:ss'}}-->
+<!--					</div>-->
+<!--					<div class="float-right">-->
+<!--						<a><i class="bi bi-arrow-repeat" ng-click="$ctrl.refreshInboxFolders();" uib-tooltip="Refresh folders"></i></a>-->
+<!--					</div>-->
+<!--				</ad-widget-footer>-->
+<!--			</ad-widget>-->
+			</ad-widget>
+		</div>
+	</div>
+
+
+	<!--<div class="col-lg-3 col-md-6 col-xs-12">-->
+	<!--<ad-widget>-->
+	<!--<ad-widget-header classes="no-background" icon="fa fa-tasks" title="Servers"></ad-widget-header>-->
+	<!--<ad-widget-body classes="card-body">-->
+	<!--&lt;!&ndash;<div class="widget-icon grey-light-bg">&ndash;&gt;-->
+	<!--&lt;!&ndash;<i class="fa fa-tasks"></i>&ndash;&gt;-->
+	<!--&lt;!&ndash;</div>&ndash;&gt;-->
+	<!--<div class="title grey-light">{{ $ctrl.ifsData.length + $ctrl.astroData.length +-->
+	<!--$ctrl.ninjaData.length}}-->
+	<!--</div>-->
+	<!--</ad-widget-body>-->
+	<!--<ad-widget-footer>Have a nice day!</ad-widget-footer>-->
+	<!--</ad-widget>-->
+	<!--</div>-->
+
+	<div class="row">
+		<div class="{{$ctrl.basketsB4QueueChartSize}} inner-col">
+			<ad-chart chart-size="$ctrl.basketsB4QueueChartSize"
+			          chart-type="'LineWithLine'"
+			          service="'basketsB4Queue'"
+			          series="'Baskets in DB queue'"
+			          icon="'database'">
+			</ad-chart>
+		</div>
+		<div class="{{$ctrl.basketsInQueue}} inner-col">
+			<ad-hz-chart ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'"
+			             chart-size="$ctrl.basketsInQueue"
+			             chart-type="'LineWithLine'"
+			             service="'basketsInQueue'"
+			             series="'Baskets in HZ queue'"
+			             high-queue-data="$ctrl.highQueueData"
+			             low-queue-data="$ctrl.lowQueueData"
+			             priority-queue-data="$ctrl.priorityQueueData"
+			             boost-queue-data="$ctrl.boostQueueData"
+			             high-baskets-size="$ctrl.highBasketsSize"
+			             low-baskets-size="$ctrl.lowBasketsSize"
+			             priority-baskets-size="$ctrl.priorityBasketsSize"
+			             boost-baskets-size="$ctrl.boostBasketsSize"
+			             high-baskets-date="$ctrl.highBasketsDate"
+			             low-baskets-date="$ctrl.lowBasketsDate"
+			             priority-baskets-date="$ctrl.priorityBasketsDate"
+			             boost-baskets-date="$ctrl.boostBasketsDate"
+			             icon="'shopping-basket'">
+			</ad-hz-chart>
+		</div>
+		<div class="{{$ctrl.failedBaskets}} inner-col">
+			<ad-chart chart-size="$ctrl.failedBaskets"
+			          chart-type="'LineWithLine'"
+			          service="'failedBaskets'"
+			          series="'Failed baskets'"
+			          icon="'database'">
+			</ad-chart>
+		</div>
+		<div class="{{$ctrl.mailboxQueue}} inner-col">
+			<ad-chart-mailbox chart-size="$ctrl.mailboxQueue"
+			                  chart-type="'LineWithLine'"
+			                  service="'mailboxQueues'"
+			                  series="$ctrl.authState.getCurrentEnv() + ' mailboxes queue'"
+			                  icon="'envelope'">
+			</ad-chart-mailbox>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3 inner-col">
+			<ad-stats-astro></ad-stats-astro>
+		</div>
+		<div class="col-lg-3 inner-col">
+			<ad-stats-ifs></ad-stats-ifs>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-stats-cm></ad-stats-cm>
+		</div>
+<!--		<div class="col-lg-3 inner-col">-->
+<!--			<ad-stats></ad-stats>-->
+<!--		</div>-->
+	</div>
+	<div class="row">
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.ifsData" type="$ctrl.ifsDataType" control="$ctrl.ifsControl"></ad-servers-table>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.astroData" type="$ctrl.astroDataType" control="$ctrl.astroControl"></ad-servers-table>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.dcData" type="$ctrl.dcDataType" control="$ctrl.dcControl"></ad-servers-table>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.ninjaData" type="$ctrl.ninjaDataType" control="$ctrl.ninjaControl"></ad-servers-table>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.sqrData" type="$ctrl.sqrDataType" control="$ctrl.sqrControl"></ad-servers-table>
+		</div>
+		<div class="col-lg-6 inner-col">
+			<ad-servers-table data="$ctrl.autofontData" type="$ctrl.autofontDataType" control="$ctrl.autofontControl"></ad-servers-table>
+		</div>
+	</div>
+
+</div>
+
+
+<!--<div class="col-lg-3 col-md-6 col-xs-12 inner-col">-->
+<!--	<ad-widget>-->
+<!--		<ad-widget-header classes="no-background" icon="fa fa-database" title="High Low Baskets in DB queue">-->
+<!--		</ad-widget-header>-->
+<!--		<ad-widget-body classes="card-body">-->
+			<!--<div class="widget-icon blue-light-bg">-->
+			<!--<i class="fa fa-shopping-basket"></i>-->
+			<!--</div>-->
+<!--			<div class="title">-->
+<!--				<span class="orange-light">{{ $ctrl.basketsBeforeQueues[0].size }}</span>-->
+<!--				&nbsp;-->
+<!--				<span class="blue-light">{{ $ctrl.basketsBeforeQueues[1].size }}</span>-->
+<!--			</div>-->
+<!--		</ad-widget-body>-->
+<!--		<ad-widget-footer>-->
+<!--			<div>-->
+<!--				<i class="bi bi-clock"></i>-->
+<!--				{{ $ctrl.basketsBeforeQueueDate | date:'HH:mm:ss' }}-->
+<!--			</div>-->
+<!--		</ad-widget-footer>-->
+<!--	</ad-widget>-->
+	<!--				<div class="col-lg-3 col-md-12 col-xs-3" ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'">-->
+	<!--				<ad-widget>-->
+	<!--					<ad-widget-header classes="no-background" icon="fa fa-shopping-basket"-->
+	<!--					                  title="HIGH baskets [HZ]"></ad-widget-header>-->
+
+	<!--					<ad-widget-body classes="card-body">-->
+	<!--						&lt;!&ndash;<div class="widget-icon blue-light-bg">&ndash;&gt;-->
+	<!--						&lt;!&ndash;<i class="fa fa-shopping-basket"></i>&ndash;&gt;-->
+	<!--						&lt;!&ndash;</div>&ndash;&gt;-->
+	<!--						<div class="title orange-light">-->
+	<!--							{{ $ctrl.highPriorityBasketsQueueSize }}-->
+	<!--						</div>-->
+	<!--					</ad-widget-body>-->
+	<!--					<ad-widget-footer>-->
+	<!--						Last check: {{ $ctrl.highPriorityBasketsQueueDate | date:'HH:mm:ss' }}-->
+	<!--					</ad-widget-footer>-->
+	<!--				</ad-widget>-->
+	<!--			</div>-->
+	<!--				<div class="col-lg-3 col-md-12 col-xs-3" ng-show="$ctrl.authState.isProd() || $ctrl.authState.getCurrentDataSource()=='USERTEST'">-->
+	<!--				<ad-widget>-->
+	<!--					<ad-widget-header classes="no-background" icon="fa fa-shopping-basket"-->
+	<!--					                  title="LOW baskets [HZ]">-->
+	<!--					</ad-widget-header>-->
+
+	<!--					<ad-widget-body classes="card-body">-->
+	<!--						&lt;!&ndash;<div class="widget-icon blue-light-bg">&ndash;&gt;-->
+	<!--						&lt;!&ndash;<i class="fa fa-shopping-basket"></i>&ndash;&gt;-->
+	<!--						&lt;!&ndash;</div>&ndash;&gt;-->
+	<!--						<div class="title blue-light">-->
+	<!--							{{ $ctrl.lowPriorityBasketsQueueSize }}-->
+	<!--						</div>-->
+	<!--					</ad-widget-body>-->
+	<!--					<ad-widget-footer>-->
+	<!--						Last check: {{ $ctrl.lowPriorityBasketsQueueDate | date:'HH:mm:ss' }}-->
+	<!--					</ad-widget-footer>-->
+	<!--				</ad-widget>-->
+	<!--			</div>-->
+<!--</div>-->

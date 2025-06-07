@@ -1,0 +1,129 @@
+<!-- Sidebar -->
+<div id="sidebar-wrapper" ng-mouseenter="$ctrl.toggleSidebar()" ng-mouseleave="$ctrl.toggleSidebar()">
+	<div class="universe">
+		<div class="stars-canvas">
+			<div class="asm-s universe-star star1" style="left: 133px; top: 86px; --star-size:3.82742px; --twinkle-duration:3s; --twinkle-delay:5s;"></div>
+			<div class="asm-s universe-star star2" style="left:145px;top: 132px; --star-size:7.16095px; --twinkle-duration:2s; --twinkle-delay:5s;"></div>
+			<div class="asm-s universe-star star3" style="left:135px;top: 160px; --star-size:7.48191px; --twinkle-duration:3s; --twinkle-delay:2s;"></div>
+			<div class="asm-s universe-star star4" style="left:150px;top: 227px; --star-size:6.65119px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star5" style="left:130px;top: 324px; --star-size:6.88668px; --twinkle-duration:2s; --twinkle-delay:3s;"></div>
+			<div class="asm-s universe-star star6" style="left:110px;top: 424px; --star-size:6.88668px; --twinkle-duration:2s; --twinkle-delay:3s;"></div>
+			<div class="asm-s universe-star star7" style="left:175px;top: 449px; --star-size:5.45794px; --twinkle-duration:3s; --twinkle-delay:7s;"></div>
+			<div class="asm-s universe-star star8" style="left:165px; top: 515px; --star-size:8.47346px; --twinkle-duration:3s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star9" style="left:10px;top: 550px; --star-size:6.16291px; --twinkle-duration:3s; --twinkle-delay:8s;"></div>
+			<div class="asm-s universe-star star10" style="left:140px; top: 559px; --star-size:3.18438px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star11" style="left:120px;top: 618px; --star-size:4.15502px; --twinkle-duration:3s; --twinkle-delay:2s;"></div>
+			<div class="asm-s universe-star star12" style="left:70px; top: 622px; --star-size:10.56396px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star13" style="left:170px; top: 680px; --star-size:4.45649px; --twinkle-duration:2s; --twinkle-delay:2s;"></div>
+			<div class="asm-s universe-star star14" style="left:45px; top: 695px; --star-size:5.20964px; --twinkle-duration:3s; --twinkle-delay:3s;"></div>
+			<div class="asm-s universe-star star15" style="left:160px; top: 702px; --star-size:7.56396px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star16" style="left:80px;top: 735px; --star-size:7.63119px; --twinkle-duration:3s; --twinkle-delay:2s;"></div>
+			<div class="asm-s universe-star star17" style="left:130px;top: 773px; --star-size:4.71729px; --twinkle-duration:3s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star18" style="left:50px; top: 787px; --star-size:7.73778px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star19" style="left:198px; top: 842px; --star-size:5.56396px; --twinkle-duration:2s; --twinkle-delay:4s;"></div>
+			<div class="asm-s universe-star star20" style="left:190px;top: 850px; --star-size:6.87731px; --twinkle-duration:2s; --twinkle-delay:3s;"></div>
+			<div class="asm-s universe-star star21" style="left:198px;top: 870px; --star-size:9.23643px; --twinkle-duration:2s; --twinkle-delay:5s;"></div>
+
+	<ul class="sidebar">
+		<li class="sidebar-main">
+			<nav class="navbar">
+				<a class="navbar-brand" href="#/">
+					ASTRO MONITOR
+<!--					<i class="bi bi-stars ml-2"></i>-->
+					<i class="bi bi-rocket-takeoff ml-2"></i>
+
+					<!--					<img src="../images/brand.png" width="26" height="27" class="d-inline-block align-middle ml-3">-->
+				</a>
+			</nav>
+		</li>
+		<li class="sidebar-title"><span>NAVIGATION</span></li>
+		<li class="sidebar-list">
+			<a href="#/">
+				Dashboard <span class="menu-icon fa fa-tachometer"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="#/dcmonitor">
+				DC Monitor <span class="menu-icon fa fa-tachometer"></span>
+			</a>
+		</li>
+		<li class="sidebar-list">
+			<a href="#/digitalforms">
+				Digital forms <span class="menu-icon fa fa-tachometer"></span>
+			</a>
+		</li>
+
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="#/tables">Queue Charts<span class="menu-icon fa fa-table"></span></a>
+		</li>
+
+		<li class="sidebar-list">
+			<a href="#/queries">הפצות<span class="menu-icon fa fa-database"></span></a>
+		</li>
+		<li class="sidebar-list">
+			<a href="#/campaigns">קמפיינים<span class="menu-icon fa fa-database"></span></a>
+		</li>
+		<li class="sidebar-list" ng-show="$ctrl.state.currentRole=='ROLE_PROD'">
+			<a href="#/whatsapp">WhatsApp<span class="menu-icon fa fa-user"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="$ctrl.state.currentRole=='ROLE_PROD'">
+			<a href="#/admin">Admin<span class="menu-icon fa fa-user"></span>
+			</a>
+		</li>
+
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/astro_servers_new" target="_blank">
+				ASTRO <span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/astro_email_distribution" target="_blank">
+				ASTRO EMAIL<span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/astro_sms_distribution" target="_blank">
+				ASTRO SMS<span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/astro_renewal_sms_distribution" target="_blank">
+				RENEWAL<span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/ifs_pmr_performance" target="_blank">
+				PMR <span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+		<li class="sidebar-list" ng-show="!$ctrl.state.isDigitalFormsRoleUser()">
+			<a href="http://searcher:8000/en-US/app/idi/search?now=1551416400&s=Failed Distrib Baskets" target="_blank">
+				Failed Baskets <span class="menu-icon fa fa-chevron-right"></span>
+			</a>
+		</li>
+	</ul>
+		</div>
+	</div>
+</div>
+<!-- End Sidebar -->
+
+
+<!-- Sidebar -->
+<!--<div id="sidebar-wrapper">-->
+<!--<ul class="sidebar-nav">-->
+<!--<li class="sidebar-brand">-->
+<!--<a href="#/">-->
+<!--Astro&Ifs Dashboard-->
+<!--</a>-->
+<!--</li>-->
+<!--<li>-->
+<!--<a href="#/">Dashboard</a>-->
+<!--</li>-->
+<!--<li>-->
+<!--<a href="#/dcmonitor">DC Monitor</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--</div>-->
+<!-- /#sidebar-wrapper -->
