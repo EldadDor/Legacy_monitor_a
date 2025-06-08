@@ -1,0 +1,54 @@
+/* /react-app/src/shared/WidgetBody.css */
+
+.widget-body {
+  padding: 15px;
+  flex: 1;
+  overflow: auto;
+}
+
+.widget-body.no-padding {
+  padding: 0;
+}
+
+.widget-body.loading {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.widget-body.loading::after {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.widget-body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.widget-body table th,
+.widget-body table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.widget-body table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.widget-body table tbody tr:hover {
+  background-color: #f8f9fa;
+}
