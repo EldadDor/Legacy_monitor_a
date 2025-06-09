@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContextProvider';
 import Login from './components/login/LoginComponent';
-import Dashboard from './components/dashboard/DashboardComponent';
+import Dashboard from './components/dashboard/Dashboard';
 import Sidebar from './components/sidebar/SidebarComponent';
 import Toolbar from './components/toolbar/ToolbarComponent';
 import './App.css';

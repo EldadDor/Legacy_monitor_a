@@ -1,0 +1,32 @@
+/* src/components/servers/ServersTable.css */
+.servers-table-container {
+  margin-bottom: 1rem;
+}
+
+.table-header {
+  background-color: #f8f9fa;
+}
+
+.action-buttons-bar {
+  background-color: #e9ecef;
+}
+
+.sort-icon {
+  opacity: 0.5;
+}
+
+.server-logs {
+  font-family: monospace;
+}
+
+.spinner {
+  color: #007bff;
+}
+
+/* Server state styles */
+.running { background-color: rgba(40, 167, 69, 0.1); }
+.idle { background-color: rgba(255, 193, 7, 0.1); }
+.down { background-color: rgba(220, 53, 69, 0.1); }
+.starting { background-color: rgba(23, 162, 184, 0.1); }
+.stopping { background-color: rgba(108, 117, 125, 0.1); }
+.restarting { background-color: rgba(0, 123, 255, 0.1); }
