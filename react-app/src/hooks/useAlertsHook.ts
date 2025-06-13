@@ -1,84 +1,82 @@
-// /react-app/src/hooks/useAlerts.ts
+// src/hooks/useAlertsHook.ts
+import { useState, useEffect, useCallback } from 'react';
+import alertsService from '../services/AlertsService';
+import { Server } from '../types/Server';
 
-import { useState, useCallback, useEffect } from 'react';
-
-export interface Alert {
-  id: string;
-  message: string;
-  type: 'success' | 'info' | 'warning' | 'danger';
-  timeout?: number; // Time in milliseconds before auto-dismissal
+interface Alert {
+    message: string;
+    link?: string;
+    type?: string;
 }
 
-export const useAlerts = () => {
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+interface UseAlertsReturn {
+    alerts: Alert[];
+    hostDownAlerts: any[];
+    hostIdleAlerts: any[];
+    addAlert: (message: string, type?: string, link?: string, env?: string) => void;
+    addHostAlert: (server: Server, serverState: string, env?: string) => void;
+    removeAlert: (message: string) => void;
+    removeHostAlert: (server: Server, env?: string) => void;
+    clearAlerts: () => void;
+}
 
-  // Add a new alert
-  const addAlert = useCallback((alert: Omit<Alert, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    const newAlert = { ...alert, id };
-    
-    setAlerts(prevAlerts => [...prevAlerts, newAlert]);
-    
-    // Auto-dismiss alert if timeout is specified
-    if (alert.timeout) {
-      setTimeout(() => {
-        removeAlert(newAlert.id);
-      }, alert.timeout);
-    }
-    
-    return newAlert.id;
-  }, []);
+export const useAlerts = (): UseAlertsReturn => {
+    const [alerts, setAlerts] = useState<Alert[]>(alertsService.getAlerts());
+    const [hostDownAlerts, setHostDownAlerts] = useState<any[]>(alertsService.getHostDownAlerts());
+    const [hostIdleAlerts, setHostIdleAlerts] = useState<any[]>(alertsService.getHostIdleAlerts());
 
-  // Remove an alert by ID
-  const removeAlert = useCallback((id: string) => {
-    setAlerts(prevAlerts => prevAlerts.filter(alert => alert.id !== id));
-  }, []);
+    // Update local state when alerts change
+    useEffect(() => {
+        // Set up an interval to check for alerts
+        const intervalId = setInterval(() => {
+            setAlerts([...alertsService.getAlerts()]);
+            setHostDownAlerts([...alertsService.getHostDownAlerts()]);
+            setHostIdleAlerts([...alertsService.getHostIdleAlerts()]);
+        }, 1000);
 
-  // Clear all alerts
-  const clearAlerts = useCallback(() => {
-    setAlerts([]);
-  }, []);
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
 
-  // Convenience methods for different alert types
-  const success = useCallback((message: string, timeout = 5000) => {
-    return addAlert({ message, type: 'success', timeout });
-  }, [addAlert]);
+    // Wrapper functions for alert service methods
+    const addAlert = useCallback((message: string, type: string = 'warning', link?: string, env?: string) => {
+        alertsService.addAlert(message, type, link, env);
+        setAlerts([...alertsService.getAlerts()]);
+    }, []);
 
-  const info = useCallback((message: string, timeout = 5000) => {
-    return addAlert({ message, type: 'info', timeout });
-  }, [addAlert]);
+    const addHostAlert = useCallback((server: Server, serverState: string, env?: string) => {
+        alertsService.addHostAlert(server, serverState, env);
+        setHostDownAlerts([...alertsService.getHostDownAlerts()]);
+        setHostIdleAlerts([...alertsService.getHostIdleAlerts()]);
+    }, []);
 
-  const warning = useCallback((message: string, timeout = 5000) => {
-    return addAlert({ message, type: 'warning', timeout });
-  }, [addAlert]);
+    const removeAlert = useCallback((message: string) => {
+        alertsService.removeAlert(message);
+        setAlerts([...alertsService.getAlerts()]);
+    }, []);
 
-  const error = useCallback((message: string, timeout = 8000) => {
-    return addAlert({ message, type: 'danger', timeout });
-  }, [addAlert]);
+    const removeHostAlert = useCallback((server: Server, env?: string) => {
+        alertsService.removeHostAlert(server, env);
+        setHostDownAlerts([...alertsService.getHostDownAlerts()]);
+        setHostIdleAlerts([...alertsService.getHostIdleAlerts()]);
+    }, []);
 
-  // Listen for global alert events
-  useEffect(() => {
-    const handleGlobalAlert = (event: CustomEvent) => {
-      const { message, type, timeout } = event.detail;
-      addAlert({ message, type, timeout });
+    const clearAlerts = useCallback(() => {
+        alertsService.clearAlerts();
+        setAlerts([]);
+        setHostDownAlerts([]);
+        setHostIdleAlerts([]);
+    }, []);
+
+    return {
+        alerts,
+        hostDownAlerts,
+        hostIdleAlerts,
+        addAlert,
+        addHostAlert,
+        removeAlert,
+        removeHostAlert,
+        clearAlerts
     };
-
-    // Cast is needed because CustomEvent isn't recognized in the standard Event type
-    document.addEventListener('app:alert', handleGlobalAlert as EventListener);
-    
-    return () => {
-      document.removeEventListener('app:alert', handleGlobalAlert as EventListener);
-    };
-  }, [addAlert]);
-
-  return {
-    alerts,
-    addAlert,
-    removeAlert,
-    clearAlerts,
-    success,
-    info,
-    warning,
-    error
-  };
 };

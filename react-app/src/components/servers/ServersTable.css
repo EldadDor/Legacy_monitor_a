@@ -1,32 +1,260 @@
 /* src/components/servers/ServersTable.css */
+
+/* ===== Container & Layout ===== */
 .servers-table-container {
-  margin-bottom: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 2rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
 }
 
+/* Full-width container that spans two columns */
+.servers-table-container-wide {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* For flex-based layouts */
+.row .servers-table-container-wide {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+/* Extend beyond parent container padding */
+.servers-table-container-wide {
+    margin-left: calc(-1 * var(--bs-gutter-x, 1.5rem));
+    margin-right: calc(-1 * var(--bs-gutter-x, 1.5rem));
+    padding-left: var(--bs-gutter-x, 1.5rem);
+    padding-right: var(--bs-gutter-x, 1.5rem);
+    width: calc(100% + (var(--bs-gutter-x, 1.5rem) * 2));
+    max-width: calc(100% + (var(--bs-gutter-x, 1.5rem) * 2));
+}
+
+/* ===== Header & Search Bar ===== */
 .table-header {
-  background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
+.table-header h5 {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #343a40;
+    margin: 0;
+}
+
+.search-container {
+    max-width: 300px;
+}
+
+.search-container .input-group-text {
+    background-color: #fff;
+    border-right: none;
+}
+
+.search-container input {
+    border-left: none;
+}
+
+/* ===== Action Buttons Bar ===== */
 .action-buttons-bar {
-  background-color: #e9ecef;
+    background-color: rgba(248, 249, 250, 0.7);
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* ===== Table Styling ===== */
+.table-responsive {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    background-color: #ffffff;
+    /* Clean subtle background - light gradient instead of dots */
+    background: linear-gradient(to bottom, rgba(249, 250, 251, 0.5) 0%, rgba(255, 255, 255, 1) 100%);
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+}
+
+.table {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+/* Table Header */
+.table thead th {
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 0 #dee2e6;
+}
+
+.table th.sortable {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.table th.sortable:hover {
+    background-color: #e9ecef;
+}
+
+/* Table Body */
+.table td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+/* Sort Icon */
 .sort-icon {
-  opacity: 0.5;
+    opacity: 0.7;
+    transition: opacity 0.2s;
 }
 
+th:hover .sort-icon {
+    opacity: 1;
+}
+
+/* ===== Server Status Colors ===== */
+tr.green-bg {
+    background-color: rgba(25, 135, 84, 0.08);
+}
+
+tr.yellow-bg {
+    background-color: rgba(255, 193, 7, 0.08);
+}
+
+tr.red-bg {
+    background-color: rgba(220, 53, 69, 0.08);
+}
+
+tr.blue-bg {
+    background-color: rgba(13, 110, 253, 0.08);
+}
+
+/* Hover effect on rows */
+tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Selected row highlight */
+.table tbody tr.selected,
+.table tbody tr.selected:hover {
+    background-color: rgba(13, 110, 253, 0.08);
+}
+
+/* ===== Buttons & Controls ===== */
+.btn-group .btn {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.btn-group .btn + .btn {
+    margin-left: 2px;
+}
+
+td .btn-group {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+/* ===== Server Logs ===== */
 .server-logs {
-  font-family: monospace;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background-color: #212529;
+    color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-size: 0.85rem;
+    line-height: 1.5;
 }
 
+/* ===== Spinner Animation ===== */
 .spinner {
-  color: #007bff;
+    color: #0d6efd;
+    animation: spin 1s linear infinite;
 }
 
-/* Server state styles */
-.running { background-color: rgba(40, 167, 69, 0.1); }
-.idle { background-color: rgba(255, 193, 7, 0.1); }
-.down { background-color: rgba(220, 53, 69, 0.1); }
-.starting { background-color: rgba(23, 162, 184, 0.1); }
-.stopping { background-color: rgba(108, 117, 125, 0.1); }
-.restarting { background-color: rgba(0, 123, 255, 0.1); }
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Modal Styling ===== */
+.modal-content {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+/* ===== Action Column Width ===== */
+.table th:last-child,
+.table td:last-child {
+    min-width: 250px;
+    width: 250px;
+}
+
+/* ===== Tooltip Style ===== */
+[title] {
+    position: relative;
+    cursor: help;
+}
+
+/* ===== Responsive Container Widths ===== */
+@media (min-width: 576px) {
+    .container .servers-table-container-wide {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container .servers-table-container-wide {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container .servers-table-container-wide {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container .servers-table-container-wide {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container .servers-table-container-wide {
+        max-width: 1320px;
+    }
+}

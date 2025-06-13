@@ -1,15 +1,16 @@
+// src/components/servers/ServersTable.tsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContextProvider';
-import { FaSort, FaSortUp, FaSortDown, FaSearch, FaSpinner, FaServer } from 'react-icons/fa';
+import {
+  FaSort, FaSortUp, FaSortDown, FaSearch, FaSpinner,
+  FaServer, FaPlay, FaStop, FaRedo, FaFileAlt
+} from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import { Modal } from '../../shared/ModalComponent';
 import './ServersTable.css';
-import { Server } from '../../types/Server'; // Import shared type
+import { Server } from '../../types/Server';
 import { Constants } from '../../utils/constantsConfiguration';
 import { controlService } from '../../services/controlService';
-
-// Server interface aligned with controlService.ts and augmented with UI fields
-
 
 const IconWrapper: React.FC<{ icon?: IconType, className?: string }> = ({ icon: IconComponent, className }) => {
   if (!IconComponent) {
@@ -32,11 +33,11 @@ const serverTableHeaders: Array<{ key: keyof Server; label: string }> = [
   { key: 'name', label: 'Name' },
   { key: 'host', label: 'Host' },
   { key: 'port', label: 'Port' },
-  { key: 'serverState', label: 'Status' }, // Assuming serverState is the primary UI status display
-  { key: 'priority', label: 'Queue' }, // Using 'priority' if it's the source for queue display
+  { key: 'serverState', label: 'Status' },
+  { key: 'priority', label: 'Queue' },
   { key: 'psLimit', label: 'Policy Limit' },
-  { key: 'withdrawalSeconds', label: 'Withdrawal' }, // Kept if 'withdrawalSeconds' is a distinct, calculated UI field
-  { key: 'fetchSeconds', label: 'Fetch' }, // Kept if 'fetchSeconds' is a distinct, calculated UI field
+  { key: 'withdrawalSeconds', label: 'Withdrawal' },
+  { key: 'fetchSeconds', label: 'Fetch' },
   { key: 'boostMode', label: 'Boost' },
   { key: 'psJobType', label: 'Job Type' },
 ];
@@ -50,11 +51,9 @@ const ServersTable: React.FC<ServersTableProps> = ({
                                                    }) => {
   const [sortType, setSortType] = useState<keyof Server>('name');
   const [sortReverse, setSortReverse] = useState<boolean>(false);
-
   const [selectedItems, setSelectedItems] = useState<Server[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<string>('');
   const [showServerLog, setShowServerLog] = useState<boolean>(false);
@@ -81,7 +80,7 @@ const ServersTable: React.FC<ServersTableProps> = ({
     if (!searchTerm) return sortedServers;
     return sortedServers.filter(server =>
         Object.values(server)
-            .filter(value => typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') // Include boolean for 'fetcher' etc.
+            .filter(value => typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')
             .some(value => String(value).toLowerCase().includes(searchTerm.toLowerCase()))
     );
   }, [sortedServers, searchTerm]);
@@ -122,8 +121,6 @@ const ServersTable: React.FC<ServersTableProps> = ({
     setShowServerLog(true);
 
     try {
-      // The 'server' object passed here must conform to controlService's Server type.
-      // Our updated Server interface ensures this.
       const logLines = await controlService.tailSplunkLog(
           server,
           Constants.DEFAULT_LOG_LINES
@@ -183,10 +180,9 @@ const ServersTable: React.FC<ServersTableProps> = ({
     setServerLogs([]);
   };
 
-  // Uses serverState (UI specific) or status (backend) for CSS class
   const getServerStateClass = (server: Server) => {
     const stateForCss = server.serverState || server.status;
-    if(!stateForCss) return server.cssClass || ''; // Fallback to cssClass if provided
+    if(!stateForCss) return server.cssClass || '';
     const stateConfig = Constants.DEFAULT_SERVER_STATES[stateForCss as keyof typeof Constants.DEFAULT_SERVER_STATES];
     return stateConfig ? stateConfig.cssClass : server.cssClass || '';
   };
@@ -201,10 +197,10 @@ const ServersTable: React.FC<ServersTableProps> = ({
   };
 
   return (
-      <div className="servers-table-container card shadow-sm mb-4">
-        <div className="card-header table-header d-flex justify-content-between align-items-center p-3">
+      <div className="servers-table-container servers-table-container-wide card">
+      <div className="card-header table-header d-flex justify-content-between align-items-center">
           <h5 className="mb-0">{title}</h5>
-          <div className="search-container input-group w-auto">
+          <div className="search-container input-group">
             <span className="input-group-text"><IconWrapper icon={FaSearch} /></span>
             <input
                 type="text"
@@ -218,69 +214,71 @@ const ServersTable: React.FC<ServersTableProps> = ({
 
         <div className="card-body p-0">
           {canPerformAction && selectedItems.length > 0 && (
-              <div className="action-buttons-bar p-3 border-bottom">
-                <span className="me-2">{selectedItems.length} item(s) selected.</span>
-                <button
-                    type="button"
-                    className="btn btn-sm btn-primary me-1"
-                    onClick={() => initiateAction('start')}
-                >
-                  Start
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-sm btn-warning me-1"
-                    onClick={() => initiateAction('restart')}
-                >
-                  Restart
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-sm btn-danger"
-                    onClick={() => initiateAction('stop')}
-                >
-                  Stop
-                </button>
+              <div className="action-buttons-bar d-flex align-items-center">
+                <span className="me-3 fw-medium">{selectedItems.length} server(s) selected</span>
+                <div className="d-flex gap-2">
+                  <button
+                      type="button"
+                      className="btn btn-sm btn-success d-flex align-items-center gap-1"
+                      onClick={() => initiateAction('start')}
+                  >
+                    <IconWrapper icon={FaPlay} /> Start
+                  </button>
+                  <button
+                      type="button"
+                      className="btn btn-sm btn-warning d-flex align-items-center gap-1"
+                      onClick={() => initiateAction('restart')}
+                  >
+                    <IconWrapper icon={FaRedo} /> Restart
+                  </button>
+                  <button
+                      type="button"
+                      className="btn btn-sm btn-danger d-flex align-items-center gap-1"
+                      onClick={() => initiateAction('stop')}
+                  >
+                    <IconWrapper icon={FaStop} /> Stop
+                  </button>
+                </div>
               </div>
           )}
 
           <div className="table-responsive">
-            <table className="table table-striped table-hover mb-0">
-              <thead className="thead-light">
+            <table className="table table-hover mb-0">
+              <thead>
               <tr>
                 {canPerformAction && (
-                    <th style={{ width: '30px' }} className="text-center">
+                    <th style={{ width: '40px' }} className="text-center">
                       <input
                           type="checkbox"
                           className="form-check-input"
                           checked={selectAll && filteredServers.length > 0}
                           onChange={toggleSelectAll}
                           disabled={loading || filteredServers.length === 0}
-                          title={selectAll ? "Deselect all" : "Select all"}
+                          title={selectAll ? "Deselect all servers" : "Select all servers"}
                       />
                     </th>
                 )}
                 {serverTableHeaders.map(header => (
-                    <th key={String(header.key)} onClick={() => handleSort(header.key)} className="sortable text-nowrap">
+                    <th key={String(header.key)} onClick={() => handleSort(header.key)} className="sortable">
                       {header.label}
                       {renderSortIcon(header.key)}
                     </th>
                 ))}
-                <th className="text-nowrap">Actions</th>
+                <th className="text-center">Actions</th>
               </tr>
               </thead>
               <tbody>
               {loading ? (
                   <tr>
-                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-4">
-                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-2x" />
-                      <div className="mt-2">Loading servers...</div>
+                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-5">
+                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-2x mb-3" />
+                      <div>Loading servers...</div>
                     </td>
                   </tr>
               ) : filteredServers.length === 0 ? (
                   <tr>
-                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-4">
-                      No servers found matching your criteria.
+                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-5">
+                      <div className="text-muted">No servers found matching your criteria.</div>
                     </td>
                   </tr>
               ) : (
@@ -297,33 +295,34 @@ const ServersTable: React.FC<ServersTableProps> = ({
                               />
                             </td>
                         )}
-                        {/* Updated to use new/correct property names */}
                         <td>{server.name}</td>
                         <td>{server.host}</td>
                         <td>{formatOptionalDisplay(server.port)}</td>
-                        <td className="fw-bold">{formatOptionalDisplay(server.serverState || server.status)}</td> {/* Display UI serverState or backend status */}
-                        <td>{formatOptionalDisplay(server.priority, Constants.ASTRO_DASHBOARD_QUEUE_TYPES)}</td> {/* Using priority with mapping */}
+                        <td className="fw-bold">{formatOptionalDisplay(server.serverState || server.status)}</td>
+                        <td>{formatOptionalDisplay(server.priority, Constants.ASTRO_DASHBOARD_QUEUE_TYPES)}</td>
                         <td>{formatOptionalDisplay(server.psLimit)}</td>
-                        <td>{formatOptionalDisplay(server.withdrawalSeconds)}</td> {/* Assuming withdrawalSeconds is populated for UI */}
-                        <td>{formatOptionalDisplay(server.fetchSeconds)}</td> {/* Assuming fetchSeconds is populated for UI */}
+                        <td>{formatOptionalDisplay(server.withdrawalSeconds)}</td>
+                        <td>{formatOptionalDisplay(server.fetchSeconds)}</td>
                         <td>{formatOptionalDisplay(server.boostMode, Constants.BOOST_MODES)}</td>
                         <td>{formatOptionalDisplay(server.psJobType, Constants.PRINTSERVER_JOBTYPES)}</td>
                         <td>
                           <div className="btn-group btn-group-sm" role="group">
                             <button
                                 type="button"
-                                className="btn btn-info"
-                                onClick={() => handleShowServerLog(server)} // Server object should now be compliant
+                                className="btn btn-outline-secondary d-flex align-items-center"
+                                onClick={() => handleShowServerLog(server)}
                                 title="View Logs"
-                                disabled={!server.link} // Optionally disable if link is critical and might be missing (though type says it's required)
+                                disabled={!server.link}
                             >
-                              {server.isSearchQueryRunning
-                                  ? <IconWrapper icon={FaSpinner} className="spinner fa-spin" />
-                                  : 'Logs'}
+                              {server.isSearchQueryRunning ? (
+                                  <IconWrapper icon={FaSpinner} className="spinner" />
+                              ) : (
+                                  <IconWrapper icon={FaFileAlt} />
+                              )}
                             </button>
                             <button
                                 type="button"
-                                className="btn btn-primary"
+                                className="btn btn-outline-success d-flex align-items-center"
                                 onClick={() => {
                                   setSelectedItems([server]);
                                   initiateAction('start');
@@ -331,11 +330,11 @@ const ServersTable: React.FC<ServersTableProps> = ({
                                 disabled={!canPerformAction || loading || (server.serverState || server.status) === Constants.SERVER_STATE.RUNNING}
                                 title="Start Server"
                             >
-                              Start
+                              <IconWrapper icon={FaPlay} />
                             </button>
                             <button
                                 type="button"
-                                className="btn btn-warning"
+                                className="btn btn-outline-warning d-flex align-items-center"
                                 onClick={() => {
                                   setSelectedItems([server]);
                                   initiateAction('restart');
@@ -343,11 +342,11 @@ const ServersTable: React.FC<ServersTableProps> = ({
                                 disabled={!canPerformAction || loading}
                                 title="Restart Server"
                             >
-                              Restart
+                              <IconWrapper icon={FaRedo} />
                             </button>
                             <button
                                 type="button"
-                                className="btn btn-danger"
+                                className="btn btn-outline-danger d-flex align-items-center"
                                 onClick={() => {
                                   setSelectedItems([server]);
                                   initiateAction('stop');
@@ -355,7 +354,7 @@ const ServersTable: React.FC<ServersTableProps> = ({
                                 disabled={!canPerformAction || loading || (server.serverState || server.status) === Constants.SERVER_STATE.DOWN}
                                 title="Stop Server"
                             >
-                              Stop
+                              <IconWrapper icon={FaStop} />
                             </button>
                           </div>
                         </td>
@@ -374,10 +373,14 @@ const ServersTable: React.FC<ServersTableProps> = ({
             >
               <div className="modal-body">
                 <p>Are you sure you want to <strong>{confirmAction}</strong> the following server(s)?</p>
-                <ul className="list-unstyled">
+                <ul className="list-group">
                   {selectedItems.map((server) => (
-                      <li key={server.id}>
-                        <IconWrapper icon={FaServer} className="server-icon me-2" /> {server.name} ({server.host})
+                      <li key={server.id} className="list-group-item d-flex align-items-center">
+                        <IconWrapper icon={FaServer} className="server-icon me-2" />
+                        <div className="ms-2">
+                          <span className="fw-bold">{server.name}</span>
+                          <small className="text-muted d-block">{server.host}{server.port ? `:${server.port}` : ''}</small>
+                        </div>
                       </li>
                   ))}
                 </ul>
@@ -395,25 +398,33 @@ const ServersTable: React.FC<ServersTableProps> = ({
 
         {showServerLog && selectedServer && (
             <Modal
-                title={`Server Logs: ${selectedServer.name} (${selectedServer.host}:${selectedServer.port || 'N/A'})`}
+                title={`Server Logs: ${selectedServer.name} (${selectedServer.host}${selectedServer.port ? `:${selectedServer.port}` : ''})`}
                 size="xl"
                 onClose={closeServerLog}
             >
               <div className="modal-body">
                 {isLogLoading ? (
-                    <div className="text-center p-4">
-                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-3x" />
-                      <p className="mt-2">Loading logs...</p>
+                    <div className="text-center p-5">
+                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-3x mb-3" />
+                      <p>Loading logs...</p>
                     </div>
                 ) : (
-                    <pre className="server-logs bg-dark text-white p-3 rounded" style={{maxHeight: '60vh', overflowY: 'auto', fontSize: '0.85em'}}>
-                {serverLogs.length > 0 ? serverLogs.join('\n') : "No log data available or logs are empty."}
-              </pre>
+                    <div className="server-logs">
+                      {serverLogs.length > 0 ? serverLogs.join('\n') : "No log data available."}
+                    </div>
                 )}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={closeServerLog}>
                   Close
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => handleShowServerLog(selectedServer)}
+                    disabled={isLogLoading}
+                >
+                  Refresh {isLogLoading && <IconWrapper icon={FaSpinner} className="spinner ms-1" />}
                 </button>
               </div>
             </Modal>

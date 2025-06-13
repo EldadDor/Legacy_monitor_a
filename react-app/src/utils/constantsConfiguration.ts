@@ -30,8 +30,21 @@ export const Constants = {
     PS_SWITCHING: 'PS_SWITCHING',
     PS_CHANGE_LIMIT: 'PS_CHANGE_LIMIT'
   },
+
+  // Check intervals
+  ASTRO_CHECK_INTERVAL: 5000, // 5 seconds
+  QUEUE_CHECK_INTERVAL: 30000, // 30 seconds
+
   // Default number of log lines to fetch
   DEFAULT_LOG_LINES: 200,
+
+  BOOST_MODES: {
+    'NORMAL': 'Normal',
+    'FAST': 'Fast',
+    'TURBO': 'Turbo',
+    'MAX': 'Maximum'
+  },
+
 
   // PrintServer job types
   PRINTSERVER_JOBTYPES: {
@@ -50,24 +63,35 @@ export const Constants = {
     '5': 'Quinary'
   },
 
-  // Astro queue types (might be different from dashboard queue types)
+  // Regular expressions
+  rex: "rex field=raw \"(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+:\\s+(.*)\\s+:\\s+basket\\s+(\\S+)\\s+.*type=([\\w]+)\\s+.*priority=(\\w+)\"",
+
+  // Astro queue types
   ASTRO_QUEUE_TYPES: {
-    'P': 'Primary',
-    'S': 'Secondary',
-    'T': 'Tertiary',
-    'Q': 'Quaternary',
-    '5': 'Quinary'
+    '0': 'BOOST',
+    '1': 'PRIORITY',
+    '2': 'HIGH',
+    '3': 'LOW'
   },
 
-  // Boost modes for servers
-  BOOST_MODES: {
-    '1': 'Low',
-    '2': 'Medium',
-    '4': 'High',
-    '8': 'Very High'
+  // Astro priorities
+  ASTRO_PRIORITIES: {
+    'BOOST': '0',
+    'PRIORITY': '1',
+    'HIGH': '2',
+    'LOW': '3'
   },
 
-  // Withdrawal speeds configuration
+
+  ASTRO_QUEUE_PRIORITIES: [
+    { priority: '0', name: 'BOOST', icon: 'fa-rocket', color: '#dc3545' },
+    { priority: '1', name: 'PRIORITY', icon: 'fa-star', color: '#fd7e14' },
+    { priority: '2', name: 'HIGH', icon: 'fa-chevron-up', color: '#28a745' },
+    { priority: '3', name: 'LOW', icon: 'fa-chevron-down', color: '#17a2b8' }
+  ],
+
+
+// Withdrawal speeds configuration
   WITHDRAWAL_SPEEDS: {
     '5': '5 sec',
     '10': '10 sec',
