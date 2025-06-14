@@ -318,7 +318,9 @@ export const controlService = {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Generate sample log content
-        const logLines = [];
+        const logLines = [''];
+        logLines.pop();
+
         for (let i = 0; i < lines; i++) {
             const timestamp = new Date(Date.now() - (lines - i) * 60000).toISOString();
             const level = ['INFO', 'WARN', 'ERROR', 'DEBUG'][Math.floor(Math.random() * 4)];

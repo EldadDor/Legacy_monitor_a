@@ -1,13 +1,49 @@
 /* /react-app/src/shared/WidgetHeader.css */
-
 .widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.widget-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.widget-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-widget-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0 5px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-widget-btn:hover {
+  color: #dc3545;
+}
+
+/*.widget-header {
   padding: 12px 15px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+}*/
 
 .widget-header h3 {
   margin: 0;

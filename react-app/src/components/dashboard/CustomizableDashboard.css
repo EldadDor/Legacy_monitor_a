@@ -1,0 +1,74 @@
+/* src/components/dashboard/CustomizableDashboard.css */
+
+.customizable-dashboard {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.dashboard-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.widget-palette {
+  display: flex;
+  gap: 8px;
+  margin-right: 20px;
+}
+
+.full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the grid items have a border and background */
+.react-grid-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Style for when a grid item is being dragged */
+.react-grid-item.react-grid-placeholder {
+  background: #0088ff;
+  opacity: 0.2;
+  border-radius: 8px;
+}
+
+/* Make grid items contain their content */
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><path fill="rgba(0,0,0,0.5)" d="M0,0 L10,0 L10,10 L0,10 z"/></svg>');
+}
+
+/* Style for the widget header */
+.react-grid-item .widget-header {
+  cursor: move;
+}
+
+.unknown-widget-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-style: italic;
+}
