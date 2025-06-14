@@ -1,0 +1,197 @@
+
+/* Server Table Group Styles */
+.server-table-group {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* Layout options */
+.server-table-group.stacked .server-table-section {
+  margin-bottom: 2rem;
+}
+
+.server-table-group.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(800px, 1fr));
+  gap: 2rem;
+}
+
+.server-table-group.grid .server-table-section {
+  margin-bottom: 0;
+}
+
+/* Table section */
+.server-table-section {
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.server-table-section.collapsed {
+  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);
+}
+
+/* Section header */
+.table-section-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.table-title-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.table-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+
+.table-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.server-count {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.running-count {
+  color: #198754;
+  font-weight: 600;
+}
+
+/* Collapse toggle */
+.collapse-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  min-width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #343a40;
+}
+
+/* Control toggle */
+.control-toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.control-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.control-toggle input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+
+.control-label {
+  font-weight: 500;
+}
+
+/* Table content */
+.table-content {
+  padding: 0;
+}
+
+/* Hide the default servers table container styling when in group */
+.server-table-section .servers-table-container {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
+.server-table-section .table-header {
+  display: none; /* Hide since we show our own header */
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .server-table-group.grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .table-title-container {
+    margin-right: 0;
+  }
+  
+  .control-toggle-container {
+    align-self: flex-start;
+  }
+}
+
+/* Animation for collapse/expand */
+.table-content {
+  transition: all 0.3s ease;
+}
+
+.server-table-section.collapsed .table-content {
+  display: none;
+}
+
+/* Loading state for section */
+.server-table-section.loading {
+  position: relative;
+}
+
+.server-table-section.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}

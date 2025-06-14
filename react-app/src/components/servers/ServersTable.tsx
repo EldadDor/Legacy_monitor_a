@@ -1,24 +1,7 @@
-// src/components/servers/ServersTable.tsx
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useAuth } from '../../contexts/AuthContextProvider';
-import {
-  FaSort, FaSortUp, FaSortDown, FaSearch, FaSpinner,
-  FaServer, FaPlay, FaStop, FaRedo, FaFileAlt
-} from 'react-icons/fa';
-import { IconType } from 'react-icons';
-import { Modal } from '../../shared/ModalComponent';
-import './ServersTable.css';
+import React, { useState, useCallback } from 'react';
 import { Server } from '../../types/Server';
-import { Constants } from '../../utils/constantsConfiguration';
-import { controlService } from '../../services/controlService';
-
-const IconWrapper: React.FC<{ icon?: IconType, className?: string }> = ({ icon: IconComponent, className }) => {
-  if (!IconComponent) {
-    return null;
-  }
-  const ActualIcon = IconComponent as React.ElementType;
-  return <span className={className}><ActualIcon /></span>;
-};
+import { FaSort, FaSortUp, FaSortDown, FaSearch, FaSpinner } from 'react-icons/fa';
+import './ServersTable.css';
 
 interface ServersTableProps {
   title: string;
@@ -26,409 +9,324 @@ interface ServersTableProps {
   onServerAction: (action: string, servers: Server[]) => void;
   canPerformAction?: boolean;
   loading?: boolean;
+  showHeader?: boolean;
+  compact?: boolean;
 }
-
-// Updated headers to use new/correct property names from the Server interface
-const serverTableHeaders: Array<{ key: keyof Server; label: string }> = [
-  { key: 'name', label: 'Name' },
-  { key: 'host', label: 'Host' },
-  { key: 'port', label: 'Port' },
-  { key: 'serverState', label: 'Status' },
-  { key: 'priority', label: 'Queue' },
-  { key: 'psLimit', label: 'Policy Limit' },
-  { key: 'withdrawalSeconds', label: 'Withdrawal' },
-  { key: 'fetchSeconds', label: 'Fetch' },
-  { key: 'boostMode', label: 'Boost' },
-  { key: 'psJobType', label: 'Job Type' },
-];
 
 const ServersTable: React.FC<ServersTableProps> = ({
                                                      title,
-                                                     servers = [],
+                                                     servers,
                                                      onServerAction,
                                                      canPerformAction = true,
-                                                     loading = false
+                                                     loading = false,
+                                                     showHeader = true,
+                                                     compact = false
                                                    }) => {
-  const [sortType, setSortType] = useState<keyof Server>('name');
-  const [sortReverse, setSortReverse] = useState<boolean>(false);
-  const [selectedItems, setSelectedItems] = useState<Server[]>([]);
-  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [sortKey, setSortKey] = useState<string>('host');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [confirmAction, setConfirmAction] = useState<string>('');
-  const [showServerLog, setShowServerLog] = useState<boolean>(false);
-  const [selectedServer, setSelectedServer] = useState<Server | null>(null);
-  const [serverLogs, setServerLogs] = useState<string[]>([]);
-  const [isLogLoading, setIsLogLoading] = useState<boolean>(false);
+  const [selectedServers, setSelectedServers] = useState<Set<string>>(new Set());
+  const [selectAll, setSelectAll] = useState<boolean>(false);
 
-  const sortedServers = useMemo(() => {
-    return [...servers].sort((a, b) => {
-      let aValue = a[sortType];
-      let bValue = b[sortType];
-
-      if (aValue === null || aValue === undefined) aValue = '' as any;
-      if (bValue === null || bValue === undefined) bValue = '' as any;
-
-      const aStr = String(aValue).toLowerCase();
-      const bStr = String(bValue).toLowerCase();
-
-      return sortReverse ? bStr.localeCompare(aStr) : aStr.localeCompare(bStr);
-    });
-  }, [servers, sortType, sortReverse]);
-
-  const filteredServers = useMemo(() => {
-    if (!searchTerm) return sortedServers;
-    return sortedServers.filter(server =>
-        Object.values(server)
-            .filter(value => typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')
-            .some(value => String(value).toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  }, [sortedServers, searchTerm]);
-
-  useEffect(() => {
-    if (filteredServers.length > 0 && selectedItems.length === filteredServers.length) {
-      setSelectAll(true);
+  // Handle sort
+  const handleSort = useCallback((key: string) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      setSelectAll(false);
+      setSortKey(key);
+      setSortDirection('asc');
     }
-  }, [selectedItems, filteredServers]);
+  }, [sortKey, sortDirection]);
 
-  useEffect(() => {
-    setSelectedItems([]);
-  }, [servers]);
-
-  const handleSort = (columnName: keyof Server) => {
-    if (sortType === columnName) {
-      setSortReverse(!sortReverse);
-    } else {
-      setSortType(columnName);
-      setSortReverse(false);
-    }
-  };
-
-  const renderSortIcon = (columnName: keyof Server) => {
-    if (sortType !== columnName) {
-      return <IconWrapper icon={FaSort} className="sort-icon ms-1" />;
-    }
-    return sortReverse ?
-        <IconWrapper icon={FaSortDown} className="sort-icon ms-1" /> :
-        <IconWrapper icon={FaSortUp} className="sort-icon ms-1" />;
-  };
-
-  const handleShowServerLog = useCallback(async (server: Server) => {
-    setSelectedServer(server);
-    setIsLogLoading(true);
-    setShowServerLog(true);
-
-    try {
-      const logLines = await controlService.tailSplunkLog(
-          server,
-          Constants.DEFAULT_LOG_LINES
-      );
-
-      if (logLines && Array.isArray(logLines)) {
-        setServerLogs(logLines);
-      } else {
-        setServerLogs(['Log data is not in the expected format or is empty.']);
-      }
-    } catch (error) {
-      console.error('Error fetching server logs:', error);
-      setServerLogs([`Error loading logs: ${error instanceof Error ? error.message : String(error)}`]);
-    } finally {
-      setIsLogLoading(false);
-    }
+  // Handle search
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   }, []);
 
-  const toggleItemSelection = (server: Server) => {
-    setSelectedItems(prevSelected => {
-      const isSelected = prevSelected.some(item => item.id === server.id);
-      if (isSelected) {
-        return prevSelected.filter(item => item.id !== server.id);
+  // Handle server selection
+  const handleSelectServer = useCallback((server: Server) => {
+    setSelectedServers(prev => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(server.id)) {
+        newSelection.delete(server.id);
       } else {
-        return [...prevSelected, server];
+        newSelection.add(server.id);
       }
+      return newSelection;
     });
-  };
+  }, []);
 
-  const toggleSelectAll = () => {
+  // Handle select all
+  const handleSelectAll = useCallback(() => {
     if (selectAll) {
-      setSelectedItems([]);
+      setSelectedServers(new Set());
     } else {
-      setSelectedItems([...filteredServers]);
+      const allIds = filteredServers.map(server => server.id);
+      setSelectedServers(new Set(allIds));
     }
-  };
+    setSelectAll(!selectAll);
+  }, [selectAll]);
 
-  const initiateAction = (action: string) => {
-    if (selectedItems.length === 0) return;
-    setConfirmAction(action);
-    setShowConfirmModal(true);
-  };
+  // Filter servers based on search term
+  const filteredServers = servers.filter(server => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    return (
+        server.name?.toLowerCase().includes(term) ||
+        server.host?.toLowerCase().includes(term) ||
+        server.status?.toLowerCase().includes(term)
+    );
+  });
 
-  const confirmServerAction = () => {
-    onServerAction(confirmAction, selectedItems);
-    setShowConfirmModal(false);
-    setSelectedItems([]);
-  };
+  // Sort servers
+  const sortedServers = [...filteredServers].sort((a, b) => {
+    const aValue = a[sortKey as keyof Server];
+    const bValue = b[sortKey as keyof Server];
 
-  const cancelServerAction = () => {
-    setShowConfirmModal(false);
-  };
+    if (aValue === null || aValue === undefined) return 1;
+    if (bValue === null || bValue === undefined) return -1;
 
-  const closeServerLog = () => {
-    setShowServerLog(false);
-    setSelectedServer(null);
-    setServerLogs([]);
-  };
+    // String comparison
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+    }
 
-  const getServerStateClass = (server: Server) => {
-    const stateForCss = server.serverState || server.status;
-    if(!stateForCss) return server.cssClass || '';
-    const stateConfig = Constants.DEFAULT_SERVER_STATES[stateForCss as keyof typeof Constants.DEFAULT_SERVER_STATES];
-    return stateConfig ? stateConfig.cssClass : server.cssClass || '';
-  };
+    // Number comparison
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return sortDirection === 'asc'
+          ? aValue - bValue
+          : bValue - aValue;
+    }
 
-  const formatOptionalDisplay = (
-      value?: string | number | boolean | null,
-      mapping?: Record<string, string>
-  ): string => {
-    if (value === undefined || value === null || String(value).trim() === '') return '-';
-    const stringValue = String(value);
-    return mapping && mapping[stringValue] ? mapping[stringValue] : stringValue;
+    // Boolean comparison
+    if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+      return sortDirection === 'asc'
+          ? (aValue ? 1 : 0) - (bValue ? 1 : 0)
+          : (bValue ? 1 : 0) - (aValue ? 1 : 0);
+    }
+
+    return 0;
+  });
+
+  // Execute action on selected servers
+  const executeAction = useCallback((action: string) => {
+    if (!canPerformAction) return;
+
+    const selectedServerObjects = sortedServers.filter(server =>
+        selectedServers.has(server.id)
+    );
+
+    if (selectedServerObjects.length === 0) {
+      alert('Please select at least one server.');
+      return;
+    }
+
+    onServerAction(action, selectedServerObjects);
+  }, [canPerformAction, onServerAction, selectedServers, sortedServers]);
+
+  // Get sort icon based on current sort state
+  const getSortIcon = (key: string) => {
+    if (sortKey !== key) return <FaSort className="sort-icon" />;
+    return sortDirection === 'asc'
+        ? <FaSortUp className="sort-icon" />
+        : <FaSortDown className="sort-icon" />;
   };
 
   return (
-      <div className="servers-table-container servers-table-container-wide card">
-      <div className="card-header table-header d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">{title}</h5>
-          <div className="search-container input-group">
-            <span className="input-group-text"><IconWrapper icon={FaSearch} /></span>
-            <input
-                type="text"
-                className="form-control"
-                placeholder="Search servers..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
+      <div className={`servers-table-container ${compact ? 'compact' : ''}`}>
+        {showHeader && (
+            <div className="table-header">
+              <h5>{title}</h5>
+              <div className="search-container">
+                <div className="input-group">
+              <span className="input-group-text">
+                <FaSearch />
+              </span>
+                  <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search servers..."
+                      value={searchTerm}
+                      onChange={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+        )}
 
-        <div className="card-body p-0">
-          {canPerformAction && selectedItems.length > 0 && (
-              <div className="action-buttons-bar d-flex align-items-center">
-                <span className="me-3 fw-medium">{selectedItems.length} server(s) selected</span>
-                <div className="d-flex gap-2">
+        {canPerformAction && (
+            <div className="action-buttons-bar">
+              <div className="btn-toolbar">
+                <div className="btn-group me-2">
                   <button
-                      type="button"
-                      className="btn btn-sm btn-success d-flex align-items-center gap-1"
-                      onClick={() => initiateAction('start')}
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={() => executeAction('start')}
+                      disabled={!canPerformAction || selectedServers.size === 0}
                   >
-                    <IconWrapper icon={FaPlay} /> Start
+                    Start
                   </button>
                   <button
-                      type="button"
-                      className="btn btn-sm btn-warning d-flex align-items-center gap-1"
-                      onClick={() => initiateAction('restart')}
+                      className="btn btn-sm btn-outline-warning"
+                      onClick={() => executeAction('idle')}
+                      disabled={!canPerformAction || selectedServers.size === 0}
                   >
-                    <IconWrapper icon={FaRedo} /> Restart
+                    Idle
                   </button>
                   <button
-                      type="button"
-                      className="btn btn-sm btn-danger d-flex align-items-center gap-1"
-                      onClick={() => initiateAction('stop')}
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => executeAction('stop')}
+                      disabled={!canPerformAction || selectedServers.size === 0}
                   >
-                    <IconWrapper icon={FaStop} /> Stop
+                    Stop
+                  </button>
+                </div>
+                <div className="btn-group">
+                  <button
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => executeAction('restart')}
+                      disabled={!canPerformAction || selectedServers.size === 0}
+                  >
+                    Restart
                   </button>
                 </div>
               </div>
-          )}
+            </div>
+        )}
 
-          <div className="table-responsive">
-            <table className="table table-hover mb-0">
-              <thead>
-              <tr>
-                {canPerformAction && (
-                    <th style={{ width: '40px' }} className="text-center">
-                      <input
-                          type="checkbox"
-                          className="form-check-input"
-                          checked={selectAll && filteredServers.length > 0}
-                          onChange={toggleSelectAll}
-                          disabled={loading || filteredServers.length === 0}
-                          title={selectAll ? "Deselect all servers" : "Select all servers"}
-                      />
-                    </th>
-                )}
-                {serverTableHeaders.map(header => (
-                    <th key={String(header.key)} onClick={() => handleSort(header.key)} className="sortable">
-                      {header.label}
-                      {renderSortIcon(header.key)}
-                    </th>
-                ))}
-                <th className="text-center">Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {loading ? (
-                  <tr>
-                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-5">
-                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-2x mb-3" />
-                      <div>Loading servers...</div>
-                    </td>
-                  </tr>
-              ) : filteredServers.length === 0 ? (
-                  <tr>
-                    <td colSpan={canPerformAction ? serverTableHeaders.length + 2 : serverTableHeaders.length + 1} className="text-center p-5">
-                      <div className="text-muted">No servers found matching your criteria.</div>
-                    </td>
-                  </tr>
-              ) : (
-                  filteredServers.map(server => (
-                      <tr key={server.id} className={getServerStateClass(server)}>
-                        {canPerformAction && (
-                            <td className="text-center">
+        <div className="table-responsive">
+          {loading ? (
+              <div className="text-center p-4">
+                <FaSpinner className="spinner me-2" />
+                <span>Loading servers...</span>
+              </div>
+          ) : sortedServers.length === 0 ? (
+              <div className="text-center p-4">
+                <p className="text-muted">No servers found</p>
+              </div>
+          ) : (
+              <table className={`table table-hover ${compact ? 'table-sm' : ''}`}>
+                <thead>
+                <tr>
+                  {canPerformAction && (
+                      <th>
+                        <div className="form-check">
+                          <input
+                              type="checkbox"
+                              className="form-check-input"
+                              checked={selectAll}
+                              onChange={handleSelectAll}
+                          />
+                        </div>
+                      </th>
+                  )}
+                  <th
+                      className="sortable"
+                      onClick={() => handleSort('host')}
+                  >
+                    Host {getSortIcon('host')}
+                  </th>
+                  <th
+                      className="sortable"
+                      onClick={() => handleSort('name')}
+                  >
+                    Name {getSortIcon('name')}
+                  </th>
+                  <th
+                      className="sortable"
+                      onClick={() => handleSort('status')}
+                  >
+                    Status {getSortIcon('status')}
+                  </th>
+                  {!compact && (
+                      <>
+                        <th
+                            className="sortable"
+                            onClick={() => handleSort('lastUpdatedDate')}
+                        >
+                          Last Updated {getSortIcon('lastUpdatedDate')}
+                        </th>
+                        <th>Actions</th>
+                      </>
+                  )}
+                </tr>
+                </thead>
+                <tbody>
+                {sortedServers.map(server => (
+                    <tr
+                        key={server.id}
+                        className={`${server.cssClass || ''} ${selectedServers.has(server.id) ? 'selected' : ''}`}
+                    >
+                      {canPerformAction && (
+                          <td>
+                            <div className="form-check">
                               <input
                                   type="checkbox"
                                   className="form-check-input"
-                                  checked={selectedItems.some(item => item.id === server.id)}
-                                  onChange={() => toggleItemSelection(server)}
-                                  disabled={loading}
+                                  checked={selectedServers.has(server.id)}
+                                  onChange={() => handleSelectServer(server)}
+                                  disabled={server.executable !== null}
                               />
+                            </div>
+                          </td>
+                      )}
+                      <td>{server.host}</td>
+                      <td>{server.name}</td>
+                      <td>
+                    <span className={`badge ${
+                        server.status === 'RUNNING' ? 'bg-success' :
+                            server.status === 'IDLE' ? 'bg-warning' :
+                                server.status === 'DOWN' ? 'bg-danger' :
+                                    'bg-secondary'
+                    }`}>
+                      {server.status}
+                    </span>
+                      </td>
+                      {!compact && (
+                          <>
+                            <td>
+                              {server.lastUpdatedDate
+                                  ? new Date(server.lastUpdatedDate).toLocaleTimeString()
+                                  : 'N/A'}
                             </td>
-                        )}
-                        <td>{server.name}</td>
-                        <td>{server.host}</td>
-                        <td>{formatOptionalDisplay(server.port)}</td>
-                        <td className="fw-bold">{formatOptionalDisplay(server.serverState || server.status)}</td>
-                        <td>{formatOptionalDisplay(server.priority, Constants.ASTRO_DASHBOARD_QUEUE_TYPES)}</td>
-                        <td>{formatOptionalDisplay(server.psLimit)}</td>
-                        <td>{formatOptionalDisplay(server.withdrawalSeconds)}</td>
-                        <td>{formatOptionalDisplay(server.fetchSeconds)}</td>
-                        <td>{formatOptionalDisplay(server.boostMode, Constants.BOOST_MODES)}</td>
-                        <td>{formatOptionalDisplay(server.psJobType, Constants.PRINTSERVER_JOBTYPES)}</td>
-                        <td>
-                          <div className="btn-group btn-group-sm" role="group">
-                            <button
-                                type="button"
-                                className="btn btn-outline-secondary d-flex align-items-center"
-                                onClick={() => handleShowServerLog(server)}
-                                title="View Logs"
-                                disabled={!server.link}
-                            >
-                              {server.isSearchQueryRunning ? (
-                                  <IconWrapper icon={FaSpinner} className="spinner" />
-                              ) : (
-                                  <IconWrapper icon={FaFileAlt} />
-                              )}
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-outline-success d-flex align-items-center"
-                                onClick={() => {
-                                  setSelectedItems([server]);
-                                  initiateAction('start');
-                                }}
-                                disabled={!canPerformAction || loading || (server.serverState || server.status) === Constants.SERVER_STATE.RUNNING}
-                                title="Start Server"
-                            >
-                              <IconWrapper icon={FaPlay} />
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-outline-warning d-flex align-items-center"
-                                onClick={() => {
-                                  setSelectedItems([server]);
-                                  initiateAction('restart');
-                                }}
-                                disabled={!canPerformAction || loading}
-                                title="Restart Server"
-                            >
-                              <IconWrapper icon={FaRedo} />
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-outline-danger d-flex align-items-center"
-                                onClick={() => {
-                                  setSelectedItems([server]);
-                                  initiateAction('stop');
-                                }}
-                                disabled={!canPerformAction || loading || (server.serverState || server.status) === Constants.SERVER_STATE.DOWN}
-                                title="Stop Server"
-                            >
-                              <IconWrapper icon={FaStop} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                  ))
-              )}
-              </tbody>
-            </table>
-          </div>
+                            <td>
+                              <div className="btn-group">
+                                <button
+                                    className="btn btn-sm btn-outline-primary"
+                                    onClick={() => onServerAction('view-log', [server])}
+                                    disabled={!canPerformAction}
+                                >
+                                  Logs
+                                </button>
+                                {server.status === 'RUNNING' && (
+                                    <button
+                                        className="btn btn-sm btn-outline-warning"
+                                        onClick={() => onServerAction('toggle-state', [server])}
+                                        disabled={!canPerformAction}
+                                    >
+                                      Idle
+                                    </button>
+                                )}
+                                {server.status === 'IDLE' && (
+                                    <button
+                                        className="btn btn-sm btn-outline-success"
+                                        onClick={() => onServerAction('toggle-state', [server])}
+                                        disabled={!canPerformAction}
+                                    >
+                                      Run
+                                    </button>
+                                )}
+                              </div>
+                            </td>
+                          </>
+                      )}
+                    </tr>
+                ))}
+                </tbody>
+              </table>
+          )}
         </div>
-
-        {showConfirmModal && (
-            <Modal
-                title={`Confirm Action: ${confirmAction.charAt(0).toUpperCase() + confirmAction.slice(1)} Server(s)`}
-                onClose={cancelServerAction}
-            >
-              <div className="modal-body">
-                <p>Are you sure you want to <strong>{confirmAction}</strong> the following server(s)?</p>
-                <ul className="list-group">
-                  {selectedItems.map((server) => (
-                      <li key={server.id} className="list-group-item d-flex align-items-center">
-                        <IconWrapper icon={FaServer} className="server-icon me-2" />
-                        <div className="ms-2">
-                          <span className="fw-bold">{server.name}</span>
-                          <small className="text-muted d-block">{server.host}{server.port ? `:${server.port}` : ''}</small>
-                        </div>
-                      </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={cancelServerAction}>
-                  Cancel
-                </button>
-                <button type="button" className="btn btn-primary" onClick={confirmServerAction}>
-                  Confirm {confirmAction.charAt(0).toUpperCase() + confirmAction.slice(1)}
-                </button>
-              </div>
-            </Modal>
-        )}
-
-        {showServerLog && selectedServer && (
-            <Modal
-                title={`Server Logs: ${selectedServer.name} (${selectedServer.host}${selectedServer.port ? `:${selectedServer.port}` : ''})`}
-                size="xl"
-                onClose={closeServerLog}
-            >
-              <div className="modal-body">
-                {isLogLoading ? (
-                    <div className="text-center p-5">
-                      <IconWrapper icon={FaSpinner} className="spinner fa-spin fa-3x mb-3" />
-                      <p>Loading logs...</p>
-                    </div>
-                ) : (
-                    <div className="server-logs">
-                      {serverLogs.length > 0 ? serverLogs.join('\n') : "No log data available."}
-                    </div>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeServerLog}>
-                  Close
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => handleShowServerLog(selectedServer)}
-                    disabled={isLogLoading}
-                >
-                  Refresh {isLogLoading && <IconWrapper icon={FaSpinner} className="spinner ms-1" />}
-                </button>
-              </div>
-            </Modal>
-        )}
       </div>
   );
 };

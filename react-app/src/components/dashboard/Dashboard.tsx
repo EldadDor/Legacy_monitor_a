@@ -1,10 +1,10 @@
 // /react-app/src/components/dashboard/Dashboard.tsx
 
-import React, {useState, useEffect, useCallback} from 'react';
-import {useAuth} from '../../contexts/AuthContextProvider';
-import {useSplunkService} from '../../hooks/useSplunkService';
-import {Constants} from '../../utils/constantsConfiguration';
-import {Server} from '../../types/Server'; // Import shared type
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../contexts/AuthContextProvider';
+import { useSplunkService } from '../../hooks/useSplunkService';
+import { Constants } from '../../utils/constantsConfiguration';
+import { Server } from '../../types/Server';
 
 import './DashboardStyles.css';
 
@@ -15,15 +15,16 @@ import WidgetBody from '../../shared/WidgetBody';
 import WidgetFooter from '../../shared/WidgetFooter';
 
 // Import chart components
-import {BarChart, HorizontalChart, MailboxChart} from '../charts';
+import { BarChart, HorizontalChart, MailboxChart } from '../charts';
 
-// Import ServersTable component
-import ServersTable from '../servers/ServersTable'; // Assuming ServersTable.tsx is in this path
-import {controlService} from '../../services/controlService'; // Assuming controlService has getServers
+// Import server table components
+import ServerTableGroup, { ServerTableConfig } from '../servers/ServerTableGroup';
+import { ServerTableService } from '../../services/ServerTableService';
+import { controlService } from '../../services/controlService';
 
 const Dashboard: React.FC = () => {
-    const {isAuthenticated, getCurrentIfsSourceType, getCurrentDataSource} = useAuth();
-    const {getCountSearchResults, getChartData} = useSplunkService();
+    const { isAuthenticated, getCurrentIfsSourceType, getCurrentDataSource } = useAuth();
+    const { getCountSearchResults, getChartData } = useSplunkService();
 
     // State variables for auto-distribution data
     const [autoDistrib, setAutoDistrib] = useState<string | number>("");
@@ -34,60 +35,178 @@ const Dashboard: React.FC = () => {
     const [hourlyData, setHourlyData] = useState<any[]>([]);
     const [mailboxData, setMailboxData] = useState<any[]>([]);
     const [statusData, setStatusData] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true); // General loading for charts
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // State for servers data
-    const [serversData, setServersData] = useState<Server[]>([]);
-    const [isLoadingServers, setIsLoadingServers] = useState<boolean>(true);
+    // State for server tables - combined and separate for primary/secondary
+    const [serverTableConfigs, setServerTableConfigs] = useState<ServerTableConfig[]>(
+        ServerTableService.getEmptyTableConfigs()
+    );
 
-    // Placeholder for server action handler
-    const handleServerAction = useCallback((action: string, selectedServers: Server[]) => {
-        console.log(`Dashboard action: ${action} on servers:`, selectedServers.map(s => s.name));
-        // Here you would typically call a service to perform the action
-        // and then re-fetch server data or update state optimistically.
-        // For now, just logging.
-        // Example:
-        // controlService.performServerAction(action, selectedServers.map(s => s.id)).then(fetchServers);
+    // Add these two state variables for primary and secondary server configs
+    // Fixed by removing the arguments to getEmptyTableConfigs()
+    const [primaryServerConfigs, setPrimaryServerConfigs] = useState<ServerTableConfig[]>(
+        ServerTableService.getEmptyTableConfigs()
+    );
+    const [secondaryServerConfigs, setSecondaryServerConfigs] = useState<ServerTableConfig[]>(
+        ServerTableService.getEmptyTableConfigs()
+    );
+
+    const [serverData, setServerData] = useState<Record<string, Server[]>>({});
+    const [controlStates, setControlStates] = useState<Record<string, boolean>>({});
+    const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+
+    // Handle server actions
+    const handleServerAction = useCallback((action: string, selectedServers: Server[], tableType: string) => {
+        console.log(`Dashboard action: ${action} on ${selectedServers.length} servers of type: ${tableType}`);
+
+        // Update loading state for this table type
+        setLoadingStates(prev => ({ ...prev, [tableType]: true }));
+
+        // Here you would call your control service
+        // Example implementation:
+        /*
+        controlService.performServerAction(action, selectedServers, tableType)
+          .then(() => {
+            // Refresh server data for this table type
+            fetchServerData(tableType);
+          })
+          .catch(error => {
+            console.error(`Failed to perform ${action} on ${tableType} servers:`, error);
+          })
+          .finally(() => {
+            setLoadingStates(prev => ({ ...prev, [tableType]: false }));
+          });
+        */
+
+        // For now, just simulate the action
+        setTimeout(() => {
+            setLoadingStates(prev => ({ ...prev, [tableType]: false }));
+        }, 1000);
     }, []);
 
-    // Fetch all dashboard data (including servers)
+    // Handle control toggle
+    const handleToggleControl = useCallback((tableId: string, control: boolean) => {
+        setControlStates(prev => ({ ...prev, [tableId]: control }));
+
+        // Call your control service to update the backend
+        // controlService.toggleControl(tableId, control, getCurrentEnv());
+
+        console.log(`Control for ${tableId} set to: ${control}`);
+    }, []);
+
+    // Filter server configs by type
+    const filterServerConfigsByType = useCallback((configs: ServerTableConfig[], primaryTypes: string[]) => {
+        // Create a set of primary server types for faster lookup
+        const primaryTypesSet = new Set(primaryTypes);
+
+        // Split configs into primary and secondary
+        const primary: ServerTableConfig[] = [];
+        const secondary: ServerTableConfig[] = [];
+
+        configs.forEach(config => {
+            if (primaryTypesSet.has(config.type)) {
+                primary.push(config);
+            } else {
+                secondary.push(config);
+            }
+        });
+
+        return { primary, secondary };
+    }, []);
+
+    // Fetch server data for all types
+    const fetchAllServerData = useCallback(async () => {
+        const serverTypes = ServerTableService.getServerTypes();
+        const newServerData: Record<string, Server[]> = {};
+        const newLoadingStates: Record<string, boolean> = {};
+
+        // Set all to loading
+        serverTypes.forEach(type => {
+            newLoadingStates[type.id] = true;
+        });
+        setLoadingStates(newLoadingStates);
+
+        try {
+            // Get all servers once
+            const allServers = await controlService.getServers();
+
+            // Filter servers by type and organize them into the newServerData object
+            serverTypes.forEach(typeConfig => {
+                const serversOfType = allServers.filter(server =>
+                    server.name.startsWith(typeConfig.type) || server.type === typeConfig.type
+                );
+
+                // Add type information if not present
+                newServerData[typeConfig.id] = serversOfType.map(server => ({
+                    ...server,
+                    id: server.id || `${server.name}-${Math.random().toString(36).substring(2, 9)}`,
+                    serverState: server.status || 'Unknown',
+                    type: server.type || typeConfig.type
+                }));
+
+                // Mark this type as loaded
+                newLoadingStates[typeConfig.id] = false;
+            });
+
+            setServerData(newServerData);
+            setLoadingStates(newLoadingStates);
+
+            // Update all configs together
+            const allConfigs = ServerTableService.createTableConfigs(
+                newServerData,
+                controlStates,
+                newLoadingStates
+            );
+
+            setServerTableConfigs(allConfigs);
+
+            // Define which server types are primary (important)
+            const primaryServerTypes = ['astro', 'ifs'];
+
+            // Split the configs into primary and secondary
+            const { primary, secondary } = filterServerConfigsByType(allConfigs, primaryServerTypes);
+
+            // Update primary and secondary configs separately
+            setPrimaryServerConfigs(primary);
+            setSecondaryServerConfigs(secondary);
+
+        } catch (error) {
+            console.error("Failed to fetch server data:", error);
+            // Reset loading states
+            const resetLoadingStates: Record<string, boolean> = {};
+            serverTypes.forEach(type => {
+                resetLoadingStates[type.id] = false;
+            });
+            setLoadingStates(resetLoadingStates);
+        }
+    }, [controlStates, filterServerConfigsByType]);
+
+    // Fetch dashboard data (charts + servers)
     const fetchDashboardData = useCallback(async () => {
         setLastCheckDate(Date.now());
-        setIsLoading(true); // For existing charts
-        setIsLoadingServers(true); // For servers table
+        setIsLoading(true);
 
         try {
             const ifsSourceType = getCurrentIfsSourceType();
             const dataSource = getCurrentDataSource();
 
-            // Fetch auto-distrib count
-            const autoDistribResponse = await getCountSearchResults(ifsSourceType, "auto-distrib", "Basket created");
+            // Fetch chart data
+            const [autoDistribResponse, chartResponse] = await Promise.all([
+                getCountSearchResults(ifsSourceType, "auto-distrib", "Basket created"),
+                getChartData(ifsSourceType, dataSource)
+            ]);
+
             setAutoDistrib(autoDistribResponse.data.toString());
             setAutoDistribQuery(autoDistribResponse.query);
 
-            // Fetch chart data
-            const chartResponse = await getChartData(ifsSourceType, dataSource);
             if (chartResponse) {
                 setHourlyData(chartResponse.hourlyData || []);
                 setMailboxData(chartResponse.mailboxData || []);
                 setStatusData(chartResponse.statusData || []);
             }
 
-            // Fetch servers data
-            // This is a placeholder. Replace with your actual server fetching logic.
-            // The fetched data needs to be transformed to match the Server interface if necessary.
-            const fetchedServers: Server[] = await controlService.getServers() || []; // Assuming controlService.getServers() exists and returns Server[]
-
-            // Map fetched data to the local Server interface, adding any UI-specific defaults if needed
-            // This is a basic mapping, adjust as per actual data from controlService.getServers()
-            const processedServers = fetchedServers.map((server, index) => ({
-                ...server, // Spread the properties from the fetched server object
-                id: server.id || `${server.name}-${index}`, // Ensure unique ID for React keys
-                serverState: server.status || 'Unknown', // Example: derive UI state from backend status
-                type: server.type || 'Generic Server', // Default type if not provided
-                // Ensure all properties expected by ServersTable are present
-            }));
-            setServersData(processedServers);
+            // Fetch server data
+            await fetchAllServerData();
 
         } catch (error) {
             console.error("Failed to fetch dashboard data:", error);
@@ -95,12 +214,10 @@ const Dashboard: React.FC = () => {
             setHourlyData([]);
             setMailboxData([]);
             setStatusData([]);
-            setServersData([]); // Clear server data on error
         } finally {
             setIsLoading(false);
-            setIsLoadingServers(false);
         }
-    }, [getCurrentIfsSourceType, getCurrentDataSource, getCountSearchResults, getChartData]);
+    }, [getCurrentIfsSourceType, getCurrentDataSource, getCountSearchResults, getChartData, fetchAllServerData]);
 
     // Initial data load
     useEffect(() => {
@@ -125,7 +242,6 @@ const Dashboard: React.FC = () => {
             setHourlyData([]);
             setMailboxData([]);
             setStatusData([]);
-            setServersData([]); // Clear server data on update event
             fetchDashboardData();
         };
 
@@ -136,23 +252,23 @@ const Dashboard: React.FC = () => {
         };
     }, [fetchDashboardData]);
 
-    // Sample data for testing/preview when actual data is not available
+    // Sample data for testing
     const sampleHourlyData = [
-        {hour: '00:00', count: 12}, {hour: '01:00', count: 8}, {hour: '02:00', count: 5},
-        {hour: '03:00', count: 3}, {hour: '04:00', count: 2}, {hour: '05:00', count: 4},
-        {hour: '06:00', count: 7}, {hour: '07:00', count: 15}, {hour: '08:00', count: 25},
-        {hour: '09:00', count: 32}, {hour: '10:00', count: 28}, {hour: '11:00', count: 20},
+        { hour: '00:00', count: 12 }, { hour: '01:00', count: 8 }, { hour: '02:00', count: 5 },
+        { hour: '03:00', count: 3 }, { hour: '04:00', count: 2 }, { hour: '05:00', count: 4 },
+        { hour: '06:00', count: 7 }, { hour: '07:00', count: 15 }, { hour: '08:00', count: 25 },
+        { hour: '09:00', count: 32 }, { hour: '10:00', count: 28 }, { hour: '11:00', count: 20 },
     ];
 
     const sampleMailboxData = [
-        {name: 'Mailbox 1', completed: 45, inProgress: 12}, {name: 'Mailbox 2', completed: 32, inProgress: 8},
-        {name: 'Mailbox 3', completed: 60, inProgress: 5}, {name: 'Mailbox 4', completed: 28, inProgress: 15},
-        {name: 'Mailbox 5', completed: 40, inProgress: 10},
+        { name: 'Mailbox 1', completed: 45, inProgress: 12 }, { name: 'Mailbox 2', completed: 32, inProgress: 8 },
+        { name: 'Mailbox 3', completed: 60, inProgress: 5 }, { name: 'Mailbox 4', completed: 28, inProgress: 15 },
+        { name: 'Mailbox 5', completed: 40, inProgress: 10 },
     ];
 
     const sampleStatusData = [
-        {status: 'Completed', count: 235}, {status: 'In Progress', count: 75},
-        {status: 'Failed', count: 12}, {status: 'Waiting', count: 45},
+        { status: 'Completed', count: 235 }, { status: 'In Progress', count: 75 },
+        { status: 'Failed', count: 12 }, { status: 'Waiting', count: 45 },
     ];
 
     if (!isAuthenticated) {
@@ -166,7 +282,7 @@ const Dashboard: React.FC = () => {
             <div className="dashboard-widgets">
                 {/* Auto Distribution Widget */}
                 <Widget>
-                    <WidgetHeader title="Auto Distribution"/>
+                    <WidgetHeader title="Auto Distribution" />
                     <WidgetBody loading={isLoading}>
                         <div className="auto-distrib-stats">
                             <h3>Baskets Created Today</h3>
@@ -185,13 +301,13 @@ const Dashboard: React.FC = () => {
 
                 {/* Status Distribution Widget */}
                 <Widget>
-                    <WidgetHeader title="Status Distribution"/>
+                    <WidgetHeader title="Status Distribution" />
                     <WidgetBody loading={isLoading}>
                         <HorizontalChart
                             data={statusData.length > 0 ? statusData : sampleStatusData}
                             yAxisDataKey="status"
                             bars={[
-                                {dataKey: 'count', fill: '#8884d8', name: 'Count'}
+                                { dataKey: 'count', fill: '#8884d8', name: 'Count' }
                             ]}
                             height={250}
                         />
@@ -203,13 +319,13 @@ const Dashboard: React.FC = () => {
 
                 {/* Hourly Activity Chart - Full Width */}
                 <Widget className="full-width">
-                    <WidgetHeader title="Hourly Activity"/>
+                    <WidgetHeader title="Hourly Activity" />
                     <WidgetBody loading={isLoading}>
                         <BarChart
                             data={hourlyData.length > 0 ? hourlyData : sampleHourlyData}
                             xAxisDataKey="hour"
                             bars={[
-                                {dataKey: 'count', fill: '#8884d8', name: 'Activity'}
+                                { dataKey: 'count', fill: '#8884d8', name: 'Activity' }
                             ]}
                             title="Baskets Created per Hour"
                             height={300}
@@ -222,7 +338,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Mailbox Status Chart - Full Width */}
                 <Widget className="full-width">
-                    <WidgetHeader title="Mailbox Status"/>
+                    <WidgetHeader title="Mailbox Status" />
                     <WidgetBody loading={isLoading}>
                         <MailboxChart
                             mailboxData={mailboxData.length > 0 ? mailboxData : sampleMailboxData}
@@ -236,33 +352,44 @@ const Dashboard: React.FC = () => {
                 </Widget>
             </div>
 
-            {/* Servers Table Widget - Outside normal widget grid to maximize width */}
-            <div className="server-management-section">
-                <h2 className="section-header mb-3">Server Management</h2>
+            {/* Primary Server Management Section */}
+            <div className="primary-server-management-section">
+                <h2 className="section-header mb-3">
+                    Primary Server Management
+                    <span className="section-subtitle">Critical Production Servers</span>
+                </h2>
 
-                {/* Use the servers-table-container-wide class directly without Widget wrapper */}
-                <div className="servers-container-wrapper">
-                    {isLoadingServers ? (
-                        <div className="loading-indicator text-center py-5">
-                            <div className="spinner-border text-primary" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
-                            <p className="mt-3">Loading server data...</p>
-                        </div>
-                    ) : (
-                        <ServersTable
-                            title="Application Servers"
-                            servers={serversData}
-                            onServerAction={handleServerAction}
-                            canPerformAction={true}
-                            loading={isLoadingServers}
-                        />
-                    )}
-                    <div className="last-updated-info text-end mt-2">
-                        <small className="text-muted">Server data last
-                            updated: {new Date(lastCheckDate).toLocaleTimeString()}</small>
-                    </div>
-                </div>
+                <ServerTableGroup
+                    tables={primaryServerConfigs}
+                    onServerAction={handleServerAction}
+                    onToggleControl={handleToggleControl}
+                    layout="grid"
+                    allowCollapse={false}
+                    className="primary-servers"
+                />
+            </div>
+
+            {/* Secondary Server Management Section */}
+            <div className="secondary-server-management-section">
+                <h2 className="section-header mb-3">
+                    Secondary Services
+                    <span className="section-subtitle">Supporting & Utility Servers</span>
+                </h2>
+
+                <ServerTableGroup
+                    tables={secondaryServerConfigs}
+                    onServerAction={handleServerAction}
+                    onToggleControl={handleToggleControl}
+                    layout="stacked"
+                    allowCollapse={true}
+                    className="secondary-servers"
+                />
+            </div>
+
+            <div className="last-updated-info text-end mt-3">
+                <small className="text-muted">
+                    Server data last updated: {new Date(lastCheckDate).toLocaleTimeString()}
+                </small>
             </div>
         </div>
     );
