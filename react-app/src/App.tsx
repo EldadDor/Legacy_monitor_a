@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContextProvider';
 import Login from './components/login/LoginComponent';
+import CentralControl from './components/central/ControlCenter';
 import Dashboard from './components/dashboard/Dashboard';
 import Sidebar from './components/sidebar/SidebarComponent';
 import Toolbar from './components/toolbar/ToolbarComponent';
@@ -39,9 +40,12 @@ const App: React.FC = () => {
                         <Route path="/dashboard" element={
                             <ProtectedRoute element={<Dashboard />} />
                         } />
+                        <Route path="/central" element={
+                            <ProtectedRoute element={<CentralControl />} />
+                        } />
                         {/* Add other protected routes here */}
-                        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                        <Route path="/" element={<Navigate to="/central" replace />} />
+                        <Route path="*" element={<Navigate to="/central" replace />} />
                     </Routes>
                 </Router>
             </div>
