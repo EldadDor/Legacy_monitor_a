@@ -1,0 +1,39 @@
+/* Default Theme - Current Bootstrap-based styling */
+.theme-default {
+  --theme-primary: #0d6efd;
+  --theme-primary-rgb: 13, 110, 253;
+  --theme-secondary: #6c757d;
+  --theme-success: #198754;
+  --theme-info: #0dcaf0;
+  --theme-warning: #ffc107;
+  --theme-danger: #dc3545;
+  --theme-light: #f8f9fa;
+  --theme-dark: #212529;
+  
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8f9fa;
+  --theme-bg-tertiary: #e9ecef;
+  
+  --theme-text-primary: #212529;
+  --theme-text-secondary: #6c757d;
+  --theme-text-muted: #adb5bd;
+  
+  --theme-border: #dee2e6;
+  --theme-border-light: #f1f3f4;
+  
+  /* Server status colors */
+  --theme-status-running: rgba(25, 135, 84, 0.08);
+  --theme-status-idle: rgba(255, 193, 7, 0.08);
+  --theme-status-down: rgba(220, 53, 69, 0.08);
+  --theme-status-info: rgba(13, 110, 253, 0.08);
+  
+  /* Table styling */
+  --theme-table-header: #f8f9fa;
+  --theme-table-hover: rgba(0, 0, 0, 0.03);
+  --theme-table-border: #dee2e6;
+  
+  /* Shadows */
+  --theme-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --theme-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  --theme-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}

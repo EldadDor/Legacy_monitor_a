@@ -1,0 +1,53 @@
+/* Light Theme - Clean white theme with subtle colors */
+.theme-light {
+  --theme-primary: #2563eb;
+  --theme-primary-rgb: 37, 99, 235;
+  --theme-secondary: #64748b;
+  --theme-success: #059669;
+  --theme-info: #0891b2;
+  --theme-warning: #d97706;
+  --theme-danger: #dc2626;
+  --theme-light: #f8fafc;
+  --theme-dark: #0f172a;
+  
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-bg-tertiary: #f1f5f9;
+  
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #475569;
+  --theme-text-muted: #94a3b8;
+  
+  --theme-border: #e2e8f0;
+  --theme-border-light: #f1f5f9;
+  
+  /* Server status colors */
+  --theme-status-running: rgba(5, 150, 105, 0.08);
+  --theme-status-idle: rgba(217, 119, 6, 0.08);
+  --theme-status-down: rgba(220, 38, 38, 0.08);
+  --theme-status-info: rgba(8, 145, 178, 0.08);
+  
+  /* Table styling */
+  --theme-table-header: #f8fafc;
+  --theme-table-hover: rgba(37, 99, 235, 0.04);
+  --theme-table-border: #e2e8f0;
+  
+  /* Shadows */
+  --theme-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  --theme-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+  --theme-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+}
+
+/* Light theme specific overrides */
+.theme-light .table {
+  background-color: var(--theme-bg-primary);
+}
+
+.theme-light .table-hover tbody tr:hover {
+  background-color: var(--theme-table-hover);
+}
+
+.theme-light .servers-table-container {
+  box-shadow: var(--theme-shadow);
+  border: 1px solid var(--theme-border-light);
+}

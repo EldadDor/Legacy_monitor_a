@@ -1,23 +1,54 @@
-/* Additional styles specific to Control Center */
-.control-center-container {
-  padding: 1rem 0;
+
+/* Control Center Container - ensures proper scrolling */
+.controlCenterContainer {
+  padding: 1.5rem;
+  width: 100%;
+  height: 100%;
+  overflow: visible; /* Allow natural flow */
+  display: flex;
+  flex-direction: column;
 }
 
-.server-group-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+/* Server Groups Container - allows natural height expansion */
+.serverGroupsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0; /* Important for proper flex behavior */
+}
+
+/* Individual server table containers */
+.serverGroupsContainer .servers-table-container {
+  flex-shrink: 0; /* Prevent shrinking */
+  margin-bottom: 1rem;
+}
+
+/* Override any height restrictions from parent CSS */
+.controlCenterContainer .table-responsive {
+  max-height: none !important; /* Remove height restrictions */
+  overflow-y: visible !important; /* Allow natural scrolling */
+  overflow-x: auto; /* Keep horizontal scroll for wide tables */
+}
+
+/* Server Group Header Styling */
+.serverGroupHeader {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s ease;
 }
 
-.server-group-header:hover {
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+.serverGroupHeader:hover {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%) !important;
 }
 
-.bulk-actions-bar {
-  background: linear-gradient(90deg, #d1ecf1 0%, #bee5eb 100%);
-  border: 1px solid #b6d4da;
-  border-radius: 0.375rem;
+/* Bulk Actions Bar */
+.bulkActionsBar {
+  background: linear-gradient(90deg, #d1ecf1 0%, #bee5eb 100%) !important;
+  border: 1px solid #b6d4da !important;
+  border-radius: 0.375rem !important;
   animation: slideDown 0.3s ease-out;
+  flex-shrink: 0;
 }
 
 @keyframes slideDown {
@@ -31,22 +62,73 @@
   }
 }
 
-.server-type-badge {
+/* Header section - fixed at top */
+.controlCenterContainer > .d-flex:first-child,
+.controlCenterContainer > .row {
+  flex-shrink: 0;
+}
+
+/* Expand/Collapse Button */
+.expandCollapseBtn {
+  background: none !important;
+  border: none !important;
+  color: #6c757d !important;
+  transition: color 0.2s ease;
+}
+
+.expandCollapseBtn:hover {
+  color: #495057 !important;
+}
+
+.expandCollapseBtn:focus {
+  box-shadow: none !important;
+}
+
+/* Server Type Badge */
+.serverTypeBadge {
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
 }
 
-.action-buttons {
+/* Action Buttons */
+.actionButtons {
   min-width: 280px;
+  white-space: nowrap;
 }
 
-.expand-collapse-btn {
-  background: none !important;
-  border: none !important;
-  color: #6c757d;
-  transition: color 0.2s ease;
+/* Ensure tables don't get cut off */
+.controlCenterContainer .servers-table-container {
+  overflow: visible !important;
 }
 
-.expand-collapse-btn:hover {
-  color: #495057;
+.controlCenterContainer .table {
+  table-layout: auto;
+  width: 100%;
+}
+
+/* Override any parent overflow restrictions */
+.controlCenterContainer {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controlCenterContainer {
+    padding: 1rem;
+  }
+
+  .actionButtons {
+    min-width: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .controlCenterContainer {
+    padding: 0.75rem;
+  }
+
+  .actionButtons {
+    min-width: 200px;
+  }
 }

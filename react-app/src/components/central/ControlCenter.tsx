@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Server } from '../../types/Server';
 import { Constants } from '../../utils/constantsConfiguration';
+import ThemeSelector from '../theme/ThemeSelector';
 import '../servers/ServersTable.css';
 import styles from './ControlCenter.css';
 
@@ -24,21 +25,21 @@ const ControlCenter: React.FC = () => {
       {
         id: 'microservices-clientzone',
         name: 'Microservices - ClientZone',
-        type: 'microservice',
+        type: 'clientzone',
         servers: [],
         expanded: true
       },
       {
         id: 'microservices-crm',
         name: 'Microservices - CRM',
-        type: 'microservice',
+        type: 'crm',
         servers: [],
         expanded: true
       },
       {
         id: 'microservices-batch',
         name: 'Microservices - Batch',
-        type: 'microservice',
+        type: 'batch',
         servers: [],
         expanded: true
       },
@@ -65,16 +66,19 @@ const ControlCenter: React.FC = () => {
   const loadServersData = async () => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API calls for each server group
-      // For now, creating mock data structure
+      // Generate mock data for all server groups
       const mockServers = generateMockServers();
 
+      // Update each group with its corresponding servers
       setServerGroups(prevGroups =>
           prevGroups.map(group => ({
             ...group,
             servers: mockServers.filter(server => server.type === group.type)
           }))
       );
+
+      console.log('Generated mock servers:', mockServers);
+      console.log('Updated server groups');
     } catch (error) {
       console.error('Error loading servers data:', error);
     } finally {
@@ -83,26 +87,36 @@ const ControlCenter: React.FC = () => {
   };
 
   const generateMockServers = (): Server[] => {
-    // Mock data generation - replace with actual API calls
-    const serverTypes = ['microservice', 'pearl', 'jidi'];
-    const mockServers: Server[] = [];
+    const serverConfigs = [
+      { type: 'clientzone', prefix: 'ClientZone', count: 4 },
+      { type: 'crm', prefix: 'CRM', count: 3 },
+      { type: 'batch', prefix: 'Batch', count: 5 },
+      { type: 'pearl', prefix: 'Pearl', count: 3 },
+      { type: 'jidi', prefix: 'Jidi', count: 4 }
+    ];
 
-    serverTypes.forEach(type => {
-      for (let i = 1; i <= 3; i++) {
+    const mockServers: Server[] = [];
+    const statusKeys = Object.keys(Constants.DEFAULT_SERVER_STATES);
+
+    serverConfigs.forEach(config => {
+      for (let i = 1; i <= config.count; i++) {
+        const randomStatus = statusKeys[Math.floor(Math.random() * statusKeys.length)];
+        const statusConfig = Constants.DEFAULT_SERVER_STATES[randomStatus as keyof typeof Constants.DEFAULT_SERVER_STATES];
+
         mockServers.push({
-          id: `${type}-server-${i}`,
-          host: `${type}-host-${i}`,
-          name: `${type.charAt(0).toUpperCase() + type.slice(1)} Server ${i}`,
-          link: `http://${type}-host-${i}:8080`,
+          id: `${config.type}-server-${i}`,
+          host: `${config.type}-host-${String(i).padStart(2, '0')}`,
+          name: `${config.prefix} Server ${i}`,
+          link: `http://${config.type}-host-${String(i).padStart(2, '0')}:8080`,
           port: '8080',
-          executable: `/opt/${type}/server.jar`,
+          executable: `/opt/${config.type}/server.jar`,
           control: true,
-          status: Object.keys(Constants.DEFAULT_SERVER_STATES)[Math.floor(Math.random() * Object.keys(Constants.DEFAULT_SERVER_STATES).length)],
-          cssClass: Constants.DEFAULT_SERVER_STATES[Object.keys(Constants.DEFAULT_SERVER_STATES)[Math.floor(Math.random() * Object.keys(Constants.DEFAULT_SERVER_STATES).length)] as keyof typeof Constants.DEFAULT_SERVER_STATES].cssClass,
-          lastUpdatedDate: Date.now(),
+          status: randomStatus,
+          cssClass: statusConfig.cssClass,
+          lastUpdatedDate: Date.now() - Math.floor(Math.random() * 300000), // Random time within last 5 minutes
           forceCheck: false,
-          type: type,
-          serverState: Object.keys(Constants.DEFAULT_SERVER_STATES)[Math.floor(Math.random() * Object.keys(Constants.DEFAULT_SERVER_STATES).length)]
+          type: config.type,
+          serverState: randomStatus
         });
       }
     });
@@ -166,7 +180,6 @@ const ControlCenter: React.FC = () => {
 
     setLoading(true);
     try {
-      // TODO: Implement actual bulk actions
       console.log(`Performing ${action} on servers:`, Array.from(selectedServers));
 
       // Simulate API call
@@ -194,7 +207,6 @@ const ControlCenter: React.FC = () => {
 
     setLoading(true);
     try {
-      // TODO: Implement actual server actions
       console.log(`Performing ${action} on server:`, server.id);
 
       // Simulate API call
@@ -296,7 +308,30 @@ const ControlCenter: React.FC = () => {
   };
 
   return (
-      <div className={`container-fluid ${styles.controlCenterContainer}`}>
+      <div className={styles.controlCenterContainer}>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2>Control Center</h2>
+          <div className="d-flex align-items-center gap-3">
+            <ThemeSelector />
+            <button
+                className="btn btn-outline-primary"
+                onClick={loadServersData}
+                disabled={loading}
+            >
+              {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" />
+                    Refreshing...
+                  </>
+              ) : (
+                  <>
+                    <i className="fas fa-sync-alt me-2" />
+                    Refresh All
+                  </>
+              )}
+            </button>
+          </div>
+        </div>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2>Control Center</h2>
           <button
@@ -338,7 +373,7 @@ const ControlCenter: React.FC = () => {
 
         {/* Bulk Actions */}
         {selectedServers.size > 0 && (
-            <div className={`alert alert-info ${styles.bulkActionsBar}`}>
+            <div className={`alert alert-info ${styles.bulkActionsBar} mb-3`}>
               <div className="d-flex justify-content-between align-items-center">
                 <span>{selectedServers.size} server(s) selected</span>
                 <div className="btn-group">
@@ -375,87 +410,111 @@ const ControlCenter: React.FC = () => {
         )}
 
         {/* Server Groups */}
-        {filteredGroups.map(group => (
-            <div key={group.id} className="servers-table-container mb-4">
-              <div className={`table-header ${styles.serverGroupHeader}`}>
-                <div className="d-flex align-items-center">
-                  <button
-                      className={`btn btn-link p-0 me-3 ${styles.expandCollapseBtn}`}
-                      onClick={() => toggleGroupExpansion(group.id)}
-                  >
-                    <i className={`fas ${group.expanded ? 'fa-chevron-down' : 'fa-chevron-right'}`} />
-                  </button>
-                  <h5 className="mb-0">{group.name}</h5>
-                  <span className={`badge bg-secondary ms-2 ${styles.serverTypeBadge}`}>
-                {group.servers.length} servers
-              </span>
-                </div>
-                <div className="btn-group btn-group-sm">
-                  <button
-                      className="btn btn-outline-primary"
-                      onClick={() => selectAllServers(group.id)}
-                  >
-                    Select All
-                  </button>
-                  <button
-                      className="btn btn-outline-secondary"
-                      onClick={() => deselectAllServers(group.id)}
-                  >
-                    Deselect All
-                  </button>
-                </div>
-              </div>
-
-              {group.expanded && (
-                  <div className="table-responsive">
-                    <table className="table table-hover mb-0">
-                      <thead>
-                      <tr>
-                        <th style={{ width: '40px' }}>
-                          <input
-                              type="checkbox"
-                              className="form-check-input"
-                              checked={group.servers.length > 0 && group.servers.every(s => selectedServers.has(s.id))}
-                              onChange={() => {
-                                if (group.servers.every(s => selectedServers.has(s.id))) {
-                                  deselectAllServers(group.id);
-                                } else {
-                                  selectAllServers(group.id);
-                                }
-                              }}
-                          />
-                        </th>
-                        <th>Server Name</th>
-                        <th>Host</th>
-                        <th>Port</th>
-                        <th>Status</th>
-                        <th>Last Updated</th>
-                        <th>Actions</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {group.servers.length > 0 ? (
-                          group.servers.map(renderServerRow)
-                      ) : (
-                          <tr>
-                            <td colSpan={7} className="text-center py-4 text-muted">
-                              {loading ? (
-                                  <>
-                                    <div className="spinner-border text-primary mb-2" />
-                                    <div>Loading servers...</div>
-                                  </>
-                              ) : (
-                                  'No servers found'
-                              )}
-                            </td>
-                          </tr>
-                      )}
-                      </tbody>
-                    </table>
+        <div className={styles.serverGroupsContainer}>
+          {filteredGroups.map((group, index) => (
+              <div key={group.id} className="servers-table-container mb-4">
+                <div className={`table-header ${styles.serverGroupHeader}`}>
+                  <div className="d-flex align-items-center">
+                    <button
+                        className={`btn btn-link p-0 me-3 ${styles.expandCollapseBtn}`}
+                        onClick={() => toggleGroupExpansion(group.id)}
+                    >
+                      <i className={`fas ${group.expanded ? 'fa-chevron-down' : 'fa-chevron-right'}`} />
+                    </button>
+                    <h5 className="mb-0">{group.name}</h5>
+                    <span className={`badge bg-secondary ms-2 ${styles.serverTypeBadge}`}>
+                  {group.servers.length} servers
+                </span>
                   </div>
-              )}
+                  <div className="btn-group btn-group-sm">
+                    <button
+                        className="btn btn-outline-primary"
+                        onClick={() => selectAllServers(group.id)}
+                        disabled={group.servers.length === 0}
+                    >
+                      Select All
+                    </button>
+                    <button
+                        className="btn btn-outline-secondary"
+                        onClick={() => deselectAllServers(group.id)}
+                    >
+                      Deselect All
+                    </button>
+                  </div>
+                </div>
+
+                {group.expanded && (
+                    <div className="table-responsive">
+                      <table className="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                          <th style={{ width: '40px' }}>
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                checked={group.servers.length > 0 && group.servers.every(s => selectedServers.has(s.id))}
+                                disabled={group.servers.length === 0}
+                                onChange={() => {
+                                  if (group.servers.every(s => selectedServers.has(s.id))) {
+                                    deselectAllServers(group.id);
+                                  } else {
+                                    selectAllServers(group.id);
+                                  }
+                                }}
+                            />
+                          </th>
+                          <th>Server Name</th>
+                          <th>Host</th>
+                          <th>Port</th>
+                          <th>Status</th>
+                          <th>Last Updated</th>
+                          <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {group.servers.length > 0 ? (
+                            group.servers.map(renderServerRow)
+                        ) : (
+                            <tr>
+                              <td colSpan={7} className="text-center py-4 text-muted">
+                                {loading ? (
+                                    <>
+                                      <div className="spinner-border text-primary mb-2" />
+                                      <div>Loading servers...</div>
+                                    </>
+                                ) : (
+                                    <>
+                                      <div>No servers configured for {group.name}</div>
+                                      <small className="text-muted">Group #{index + 1} - Type: {group.type}</small>
+                                    </>
+                                )}
+                              </td>
+                            </tr>
+                        )}
+                        </tbody>
+                      </table>
+                    </div>
+                )}
+              </div>
+          ))}
+        </div>
+
+        {/* Debug Information */}
+        {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4">
+              <details>
+                <summary>Debug Information</summary>
+                <pre className="bg-light p-2 mt-2">
+              {JSON.stringify({
+                serverGroupsCount: serverGroups.length,
+                totalServers: serverGroups.reduce((acc, group) => acc + group.servers.length, 0),
+                loading,
+                selectedServersCount: selectedServers.size
+              }, null, 2)}
+            </pre>
+              </details>
             </div>
-        ))}
+        )}
       </div>
   );
 };

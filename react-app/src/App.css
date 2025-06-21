@@ -1,31 +1,45 @@
+
 .App {
   text-align: center;
 }
-
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
-
+/* Ensure the app container uses full height with flex layout */
 .app-container {
-  display: flex;
   height: 100vh;
-  width: 100vw;
+  display: flex;
+  flex-direction: row; /* Side-by-side layout for sidebar + main content */
   overflow: hidden;
 }
 
+/* Main content area - works with sidebar layout */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden;
+  min-height: 0; /* Important for flex children to be able to shrink */
+  padding-bottom: 2rem; /* Add some bottom padding */
 }
 
 /* Style adjustments for when sidebar is collapsed */
 .sidebar-collapsed .main-content {
   margin-left: 60px; /* Width of collapsed sidebar */
+}
+
+/* Make sure the body and html allow full height */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  height: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
