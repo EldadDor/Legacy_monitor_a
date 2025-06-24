@@ -36,7 +36,7 @@ const SidebarComponent: React.FC = () => {
   return (
       <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
-          <h3>{collapsed ? 'AD' : 'Astro Dashboard'}</h3>
+          <h3>{collapsed ? 'CDC' : 'Central-Dashboard-Control- '}</h3>
           <button onClick={toggleCollapse} className="collapse-btn">
             {/* This usage is standard and should work */}
             {/*<span>{collapsed ? <FaAngleRight /> : <FaAngleLeft />}</span>*/}
